@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dungeon Profit Calculator</title>
-<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 :root {
@@ -16,28 +16,28 @@
   --pink-glow:rgba(255,140,200,.15);
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;font-size:15px;min-height:100vh}
+body{background:var(--bg);color:var(--text);font-family:'Patrick Hand',sans-serif;font-size:15px;min-height:100vh}
 body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,140,200,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,140,200,.04) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
 .wrap{position:relative;z-index:1;max-width:1400px;margin:0 auto;padding:20px}
 header{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border2)}
 header h1{font-size:26px;font-weight:700;letter-spacing:3px;text-transform:uppercase;background:linear-gradient(135deg,var(--accent),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.sub{font-family:'Share Tech Mono';font-size:10px;color:var(--text3);letter-spacing:2px}
-.status-bar{margin-left:auto;display:flex;align-items:center;gap:8px;font-family:'Share Tech Mono';font-size:11px}
+.sub{font-family:'Patrick Hand';font-size:10px;color:var(--text3);letter-spacing:2px}
+.status-bar{margin-left:auto;display:flex;align-items:center;gap:8px;font-family:'Patrick Hand';font-size:11px}
 .sdot{width:6px;height:6px;border-radius:50%;background:var(--text3);animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 .tabs{display:flex;gap:0;margin-bottom:16px;border-bottom:1px solid var(--border2)}
-.tab{padding:10px 24px;font-family:'Share Tech Mono';font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s}
+.tab{padding:10px 24px;font-family:'Patrick Hand';font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s}
 .tab:hover{color:var(--text2)}
 .tab.active{color:var(--accent);border-bottom-color:var(--accent)}
 .tab-content{display:none}
 .tab-content.active{display:block}
 .panel{background:var(--bg2);border:1px solid var(--border);border-radius:4px;overflow:hidden;margin-bottom:14px}
-.ph{background:var(--bg3);border-bottom:1px solid var(--border);padding:9px 14px;display:flex;align-items:center;gap:8px;font-family:'Share Tech Mono';font-size:10px;letter-spacing:2px;color:var(--text2);text-transform:uppercase}
+.ph{background:var(--bg3);border-bottom:1px solid var(--border);padding:9px 14px;display:flex;align-items:center;gap:8px;font-family:'Patrick Hand';font-size:10px;letter-spacing:2px;color:var(--text2);text-transform:uppercase}
 .ph .dot{width:5px;height:5px;border-radius:50%;background:var(--accent)}
 .pb{padding:14px}
 .ctrl{margin-bottom:12px}
-.clabel{font-family:'Share Tech Mono';font-size:10px;letter-spacing:1.5px;color:var(--text3);text-transform:uppercase;margin-bottom:5px;display:block}
-input[type=number],select{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:3px;color:var(--text);font-family:'Share Tech Mono';font-size:13px;padding:7px 10px;outline:none;transition:border-color .2s}
+.clabel{font-family:'Patrick Hand';font-size:10px;letter-spacing:1.5px;color:var(--text3);text-transform:uppercase;margin-bottom:5px;display:block}
+input[type=number],select{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:3px;color:var(--text);font-family:'Patrick Hand';font-size:13px;padding:7px 10px;outline:none;transition:border-color .2s}
 input[type=number]:focus,select:focus{border-color:var(--accent)}
 input[type=range]{width:100%;appearance:none;background:transparent}
 input[type=range]::-webkit-slider-runnable-track{height:6px;background:linear-gradient(90deg,var(--accent),var(--purple));border-radius:999px;border:1px solid var(--border2)}
@@ -45,7 +45,7 @@ input[type=range]::-webkit-slider-thumb{appearance:none;width:16px;height:16px;b
 input[type=range]::-moz-range-track{height:6px;background:linear-gradient(90deg,var(--accent),var(--purple));border-radius:999px;border:1px solid var(--border2)}
 input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:#fff;border:2px solid var(--accent);box-shadow:0 0 10px rgba(255,140,200,.25);cursor:pointer}
 .slider-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
-.slider-value{font-family:'Share Tech Mono';font-size:11px;color:var(--accent);letter-spacing:1px}
+.slider-value{font-family:'Patrick Hand';font-size:11px;color:var(--accent);letter-spacing:1px}
 .divider{border:none;border-top:1px solid var(--border);margin:12px 0}
 .trow{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border)}
 .trow:last-child{border-bottom:none}
@@ -54,23 +54,23 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
 .toggle.on{background:var(--accent);border-color:var(--accent)}
 .toggle::after{content:'';position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:#fff;transition:left .2s}
 .toggle.on::after{left:18px}
-.run-btn{width:100%;padding:11px;background:linear-gradient(135deg,#4a2248,#2e1238);border:1px solid var(--accent);border-radius:3px;color:var(--accent);font-family:'Rajdhani';font-size:15px;font-weight:700;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:all .2s;margin-top:6px}
+.run-btn{width:100%;padding:11px;background:linear-gradient(135deg,#4a2248,#2e1238);border:1px solid var(--accent);border-radius:3px;color:var(--accent);font-family:'Patrick Hand';font-size:15px;font-weight:700;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:all .2s;margin-top:6px}
 .run-btn:hover{background:linear-gradient(135deg,#5e2c58,#3a1845)}
 .run-btn:disabled{opacity:.4;cursor:not-allowed}
-.btn-sm{padding:7px 14px;background:var(--bg3);border:1px solid var(--border2);border-radius:3px;color:var(--text2);font-family:'Share Tech Mono';font-size:11px;letter-spacing:1px;cursor:pointer;transition:all .2s}
+.btn-sm{padding:7px 14px;background:var(--bg3);border:1px solid var(--border2);border-radius:3px;color:var(--text2);font-family:'Patrick Hand';font-size:11px;letter-spacing:1px;cursor:pointer;transition:all .2s}
 .btn-sm:hover{border-color:var(--accent);color:var(--accent)}
 .btn-sm.primary{border-color:var(--accent);color:var(--accent);background:rgba(255,140,200,.08)}
 .btn-sm.primary:hover{background:rgba(255,140,200,.15)}
 .btn-sm.danger{border-color:var(--red);color:var(--red);background:rgba(255,68,68,.05)}
 .ptable{width:100%;border-collapse:collapse;font-size:12px}
-.ptable th{font-family:'Share Tech Mono';font-size:9px;letter-spacing:1.5px;color:var(--text3);text-transform:uppercase;text-align:left;padding:5px 8px;border-bottom:1px solid var(--border)}
+.ptable th{font-family:'Patrick Hand';font-size:9px;letter-spacing:1.5px;color:var(--text3);text-transform:uppercase;text-align:left;padding:5px 8px;border-bottom:1px solid var(--border)}
 .ptable td{padding:5px 8px;border-bottom:1px solid var(--border)}
 .ptable tr:last-child td{border-bottom:none}
 .iname{color:var(--text);font-weight:600}
 .iname.legendary{color:var(--gold)}
 .iname.rare{color:var(--purple)}
 .iname.uncommon{color:var(--accent3)}
-.mtag{font-family:'Share Tech Mono';font-size:9px;padding:1px 4px;border-radius:2px;letter-spacing:1px}
+.mtag{font-family:'Patrick Hand';font-size:9px;padding:1px 4px;border-radius:2px;letter-spacing:1px}
 .mtag.bz{background:rgba(255,140,200,.12);color:var(--accent);border:1px solid rgba(255,140,200,.25)}
 .mtag.ah{background:rgba(255,215,0,.1);color:var(--gold);border:1px solid rgba(255,215,0,.2)}
 .sgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
@@ -80,10 +80,10 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
 .scard.neg::before{background:linear-gradient(90deg,var(--red),transparent)}
 .scard.neu::before{background:linear-gradient(90deg,var(--accent),transparent)}
 .scard.gld::before{background:linear-gradient(90deg,var(--gold),transparent)}
-.slabel{font-family:'Share Tech Mono';font-size:9px;letter-spacing:1.5px;color:var(--text3);text-transform:uppercase;margin-bottom:6px}
+.slabel{font-family:'Patrick Hand';font-size:9px;letter-spacing:1.5px;color:var(--text3);text-transform:uppercase;margin-bottom:6px}
 .sval{font-size:20px;font-weight:700;line-height:1}
 .sval.pos{color:var(--accent3)} .sval.neg{color:var(--red)} .sval.neu{color:var(--accent)} .sval.gld{color:var(--gold)}
-.ssub{font-family:'Share Tech Mono';font-size:10px;color:var(--text3);margin-top:3px}
+.ssub{font-family:'Patrick Hand';font-size:10px;color:var(--text3);margin-top:3px}
 .progwrap{background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:10px 14px;margin-bottom:12px;display:none}
 .progwrap.vis{display:block}
 .progtrack{background:var(--bg);border-radius:2px;height:3px;overflow:hidden;margin-top:6px}
@@ -93,7 +93,7 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
 .manual-price-row:last-child{border-bottom:none}
 .manual-price-row .iname{flex:1;font-size:12px}
 .manual-price-row input[type=number]{width:140px;flex:none}
-.manual-price-notice{background:rgba(255,68,68,.08);border:1px solid rgba(255,68,68,.2);border-radius:3px;padding:10px 14px;margin-bottom:10px;font-family:'Share Tech Mono';font-size:11px;color:var(--red);letter-spacing:.5px}
+.manual-price-notice{background:rgba(255,68,68,.08);border:1px solid rgba(255,68,68,.2);border-radius:3px;padding:10px 14px;margin-bottom:10px;font-family:'Patrick Hand';font-size:11px;color:var(--red);letter-spacing:.5px}
 .manual-price-notice .notice-title{font-weight:700;margin-bottom:4px;font-size:12px}
 .checkbox-row{display:flex;align-items:center;gap:8px;padding:7px 0}
 .checkbox-row input[type=checkbox]{position:absolute;opacity:0;pointer-events:none}
@@ -105,22 +105,22 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
 .checkbox-row input[type=checkbox]:checked + .checkbox-box{border-color:var(--accent);box-shadow:0 0 8px rgba(255,140,200,.18)}
 .checkbox-row input[type=checkbox]:checked + .checkbox-box::after{transform:scale(1)}
 .checkbox-row input[type=checkbox]:focus-visible + .checkbox-box{outline:1px solid var(--accent);outline-offset:2px}
-.plabel{font-family:'Share Tech Mono';font-size:10px;color:var(--text3);display:flex;justify-content:space-between}
+.plabel{font-family:'Patrick Hand';font-size:10px;color:var(--text3);display:flex;justify-content:space-between}
 .dtable{width:100%;border-collapse:collapse;font-size:12px}
-.dtable th{font-family:'Share Tech Mono';font-size:9px;letter-spacing:1.5px;color:var(--text3);text-transform:uppercase;text-align:left;padding:5px 8px;border-bottom:1px solid var(--border);background:var(--bg3)}
+.dtable th{font-family:'Patrick Hand';font-size:9px;letter-spacing:1.5px;color:var(--text3);text-transform:uppercase;text-align:left;padding:5px 8px;border-bottom:1px solid var(--border);background:var(--bg3)}
 .dtable td{padding:5px 8px;border-bottom:1px solid var(--border)}
 .dtable tr:last-child td{border-bottom:none}
 .bar-track{background:var(--bg3);border-radius:2px;height:5px;overflow:hidden;width:100px}
 .bar-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--accent),var(--purple))}
 .sim-auto-kismet-controls{margin-top:8px;padding:8px 0;border-top:1px solid var(--border)}
 .mgrid{display:grid;grid-template-columns:300px 1fr;gap:16px}
-.placeholder{text-align:center;padding:50px 20px;font-family:'Share Tech Mono';font-size:12px;color:var(--text3);letter-spacing:1px}
+.placeholder{text-align:center;padding:50px 20px;font-family:'Patrick Hand';font-size:12px;color:var(--text3);letter-spacing:1px}
 .placeholder .big{font-size:40px;margin-bottom:12px;opacity:.3}
 .sim-layout{display:grid;grid-template-columns:1fr 340px;gap:16px;align-items:start}
 .chest-ui{background:var(--bg2);border:1px solid var(--border);border-radius:4px;overflow:hidden}
 .chest-header{background:#1a0a00;border-bottom:1px solid #3a2000;padding:10px 16px;display:flex;align-items:center;justify-content:space-between}
-.chest-title{font-family:'Share Tech Mono';font-size:11px;letter-spacing:2px;color:#ffaa00;text-transform:uppercase}
-.chest-cost{font-family:'Share Tech Mono';font-size:12px;color:var(--gold)}
+.chest-title{font-family:'Patrick Hand';font-size:11px;letter-spacing:2px;color:#ffaa00;text-transform:uppercase}
+.chest-cost{font-family:'Patrick Hand';font-size:12px;color:var(--gold)}
 .chest-items{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:16px;min-height:180px}
 .chest-slot{background:#0d1117;border:1px solid #2a3540;border-radius:3px;aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;transition:all .3s;overflow:hidden}
 .chest-slot.filled{border-color:#3a4a5a}
@@ -128,25 +128,25 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
 .chest-slot.rare{border-color:#8844ff;box-shadow:0 0 8px rgba(136,68,255,.15)}
 .chest-slot.uncommon{border-color:#44aa44;box-shadow:0 0 6px rgba(68,170,68,.1)}
 .chest-slot .item-icon{font-size:28px;line-height:1}
-.chest-slot .item-label{font-size:8px;font-family:'Share Tech Mono';color:var(--text3);text-align:center;padding:0 3px;margin-top:2px;line-height:1.2;word-break:break-word}
+.chest-slot .item-label{font-size:8px;font-family:'Patrick Hand';color:var(--text3);text-align:center;padding:0 3px;margin-top:2px;line-height:1.2;word-break:break-word}
 .chest-slot.legendary .item-label{color:#ffaa00}
 .chest-slot.rare .item-label{color:#aa77ff}
 .chest-slot.uncommon .item-label{color:#44cc44}
 .chest-slot.empty{opacity:.25}
-.chest-slot .item-val{font-size:8px;font-family:'Share Tech Mono';color:var(--text3);margin-top:1px}
+.chest-slot .item-val{font-size:8px;font-family:'Patrick Hand';color:var(--text3);margin-top:1px}
 .chest-actions{padding:12px 16px;border-top:1px solid var(--border);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .session-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
 .ss-card{background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:10px 12px}
-.ss-label{font-family:'Share Tech Mono';font-size:9px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
+.ss-label{font-family:'Patrick Hand';font-size:9px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
 .ss-val{font-size:18px;font-weight:700}
 .ss-val.pos{color:var(--accent3)} .ss-val.neg{color:var(--red)} .ss-val.neu{color:var(--accent)} .ss-val.gld{color:var(--gold)}
 .run-log{background:var(--bg3);border:1px solid var(--border);border-radius:3px;max-height:320px;overflow-y:auto}
-.log-entry{display:flex;justify-content:space-between;align-items:center;padding:6px 10px;border-bottom:1px solid var(--border);font-family:'Share Tech Mono';font-size:10px}
+.log-entry{display:flex;justify-content:space-between;align-items:center;padding:6px 10px;border-bottom:1px solid var(--border);font-family:'Patrick Hand';font-size:10px}
 .log-entry:last-child{border-bottom:none}
 .log-run{color:var(--text3)}
 .log-action{color:var(--text2)}
 .log-profit.pos{color:var(--accent3)} .log-profit.neg{color:var(--red)} .log-profit.neu{color:var(--accent)}
-.chest-empty-msg{display:flex;align-items:center;justify-content:center;height:180px;font-family:'Share Tech Mono';font-size:12px;color:var(--text3);letter-spacing:1px;flex-direction:column;gap:8px}
+.chest-empty-msg{display:flex;align-items:center;justify-content:center;height:180px;font-family:'Patrick Hand';font-size:12px;color:var(--text3);letter-spacing:1px;flex-direction:column;gap:8px}
 .chest-empty-msg .big{font-size:36px;opacity:.3}
 @keyframes popin{0%{transform:scale(0);opacity:0}60%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
 .chest-slot.animate{animation:popin .3s ease forwards}
@@ -193,14 +193,14 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
             <label class="clabel">Number of Runs</label>
             <input type="number" id="numRuns" value="100000" min="1000" max="1000000" step="1000">
           </div>
-          <div id="floorNotice" style="font-family:'Share Tech Mono';font-size:10px;color:var(--text3);margin-top:-6px">F7 simulation with max boss luck assumptions.</div>
+          <div id="floorNotice" style="font-family:'Patrick Hand';font-size:10px;color:var(--text3);margin-top:-6px">F7 simulation with max boss luck assumptions.</div>
           <div class="ctrl" id="m7ScoreMixControls" style="display:none;margin-top:10px">
             <div class="slider-head">
               <label class="clabel" for="m7SRate" style="margin-bottom:0">% of Runs That Were S</label>
               <span class="slider-value" id="m7SRateValue">0%</span>
             </div>
             <input type="range" id="m7SRate" value="0" min="0" max="100" step="1" oninput="updateM7SRate()" onchange="updateM7SRate()">
-            <div style="font-family:'Share Tech Mono';font-size:10px;color:var(--text3);margin-top:4px">Remaining runs are treated as S+.</div>
+            <div style="font-family:'Patrick Hand';font-size:10px;color:var(--text3);margin-top:4px">Remaining runs are treated as S+.</div>
           </div>
           <hr class="divider">
           <div class="checkbox-row" style="padding:0 0 8px">
@@ -219,7 +219,7 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
               <label class="clabel">Reroll Threshold (coins)</label>
               <input type="number" id="kismetThreshold" value="750000" min="0" step="100000">
             </div>
-            <div style="font-family:'Share Tech Mono';font-size:10px;color:var(--text3);margin-top:-6px">Reroll if profit &lt; threshold (-1.1M for feather)</div>
+            <div style="font-family:'Patrick Hand';font-size:10px;color:var(--text3);margin-top:-6px">Reroll if profit &lt; threshold (-1.1M for feather)</div>
           </div>
           <hr class="divider">
           <button class="run-btn" id="runBtn" onclick="runSimulation()">RUN SIMULATION</button>
@@ -245,7 +245,7 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
           </div>
           <table class="ptable">
             <thead><tr><th>Item</th><th>Mkt</th><th>After Tax</th></tr></thead>
-            <tbody id="priceTableBody"><tr><td colspan="3" style="padding:14px;text-align:center;font-family:'Share Tech Mono';font-size:11px;color:var(--text3)">Fetching prices...</td></tr></tbody>
+            <tbody id="priceTableBody"><tr><td colspan="3" style="padding:14px;text-align:center;font-family:'Patrick Hand';font-size:11px;color:var(--text3)">Fetching prices...</td></tr></tbody>
           </table>
         </div>
       </div>
@@ -281,7 +281,7 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
           <button class="btn-sm primary" id="openBtn" onclick="openChest()">OPEN CHEST</button>
           <button class="btn-sm" id="kismetBtn" onclick="useKismet()" style="display:none">KISMET FEATHER (-1.1M)</button>
           <button class="btn-sm danger" onclick="skipChest()">SKIP (FREE CHEST +100k)</button>
-          <span id="rerollLabel" style="font-family:'Share Tech Mono';font-size:10px;color:var(--text3);margin-left:auto"></span>
+          <span id="rerollLabel" style="font-family:'Patrick Hand';font-size:10px;color:var(--text3);margin-left:auto"></span>
         </div>
       </div>
 
@@ -313,7 +313,7 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
             <span class="tlabel">Kismet Feather available</span>
             <div class="toggle on" id="simKismetToggle" onclick="toggleSimKismet()"></div>
           </div>
-          <div style="font-family:'Share Tech Mono';font-size:10px;color:var(--text3);margin-top:6px">Each run you can reroll once for -1.1M</div>
+          <div style="font-family:'Patrick Hand';font-size:10px;color:var(--text3);margin-top:6px">Each run you can reroll once for -1.1M</div>
           <div class="sim-auto-kismet-controls">
             <div class="checkbox-row">
               <label class="checkbox-control" for="simAutoKismetCheck">
@@ -327,7 +327,7 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
                 <label class="clabel">Auto-Kismet Threshold (coins)</label>
                 <input type="number" id="simAutoKismetThreshold" value="0" min="0" step="100000" onchange="updateSimAutoKismetThreshold()">
               </div>
-              <div style="font-family:'Share Tech Mono';font-size:10px;color:var(--text3);margin-top:-6px">Auto-reroll if chest profit &lt; this value</div>
+              <div style="font-family:'Patrick Hand';font-size:10px;color:var(--text3);margin-top:-6px">Auto-reroll if chest profit &lt; this value</div>
             </div>
           </div>
         </div>
@@ -342,9 +342,9 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
             <div class="ss-card"><div class="ss-label">Avg / Run</div><div class="ss-val neu" id="ss-avg">-</div></div>
             <div class="ss-card"><div class="ss-label">Best Run</div><div class="ss-val gld" id="ss-best">-</div></div>
           </div>
-          <div style="font-family:'Share Tech Mono';font-size:9px;color:var(--text3);margin-bottom:6px;letter-spacing:1px">RUN LOG</div>
+          <div style="font-family:'Patrick Hand';font-size:9px;color:var(--text3);margin-bottom:6px;letter-spacing:1px">RUN LOG</div>
           <div class="run-log" id="runLog">
-            <div style="padding:20px;text-align:center;font-family:'Share Tech Mono';font-size:11px;color:var(--text3)">No runs yet</div>
+            <div style="padding:20px;text-align:center;font-family:'Patrick Hand';font-size:11px;color:var(--text3)">No runs yet</div>
           </div>
         </div>
       </div>
@@ -354,107 +354,107 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
 </div>
 <script>
 const LOOT = [
-  {weight:15, quality:360, id:'NECRONS_HANDLE', name:"Necron's Handle", market:'ah', rarity:'legendary', icon:'ðŸ’€', coinsToOpen:100000000},
-  {weight:20, quality:350, id:'IMPLOSION_SCROLL', name:'Implosion Scroll', market:'bz', rarity:'rare', icon:'ðŸ“œ', coinsToOpen:50000000},
-  {weight:20, quality:350, id:'SHADOW_WARP_SCROLL', name:'Shadow Warp Scroll', market:'bz', rarity:'rare', icon:'ðŸ“œ', coinsToOpen:50000000},
-  {weight:20, quality:350, id:'WITHER_SHIELD_SCROLL', name:'Wither Shield Scroll', market:'bz', rarity:'rare', icon:'ðŸ“œ', coinsToOpen:50000000},
-  {weight:80, quality:330, id:'AUTO_RECOMBOBULATOR', name:'Auto Recombobulator', market:'ah', rarity:'rare', icon:'âš™ï¸', coinsToOpen:10000000},
-  {weight:80, quality:310, id:'WITHER_CHESTPLATE', name:'Wither Chestplate', market:'ah', rarity:'rare', icon:'ðŸ§¥', coinsToOpen:10000000},
-  {weight:80, quality:290, id:'ONE_FOR_ALL_BOOK', name:'One For All Book', market:'bz', rarity:'rare', icon:'ðŸ“—', coinsToOpen:2000000},
-  {weight:400, quality:250, id:'RECOMBOBULATOR_3000', name:'Recombobulator 3000', market:'bz', rarity:'uncommon', icon:'ðŸ”®', coinsToOpen:6000000},
-  {weight:320, quality:250, id:'WITHER_LEGGINGS', name:'Wither Leggings', market:'ah', rarity:'rare', icon:'ðŸ‘–', coinsToOpen:6000000},
-  {weight:480, quality:230, id:'WITHER_CLOAK_SWORD', name:'Wither Cloak Sword', market:'ah', rarity:'rare', icon:'âš”ï¸', coinsToOpen:4500000},
-  {weight:480, quality:210, id:'WITHER_BLOOD', name:'Wither Blood', market:'bz', rarity:'rare', icon:'ðŸ©¸', coinsToOpen:3000000},
-  {weight:480, quality:210, id:'WITHER_HELMET', name:'Wither Helmet', market:'ah', rarity:'rare', icon:'â›‘ï¸', coinsToOpen:4000000},
-  {weight:800, quality:180, id:'SOUL_EATER_BOOK', name:'Soul Eater Book', market:'bz', rarity:'uncommon', icon:'ðŸ“•', coinsToOpen:2000000},
-  {weight:400, quality:175, id:'FUMING_POTATO_BOOK', name:'Fuming Potato Book', market:'bz', rarity:'uncommon', icon:'ðŸ¥”', coinsToOpen:2000000},
-  {weight:480, quality:170, id:'WITHER_BOOTS', name:'Wither Boots', market:'ah', rarity:'rare', icon:'ðŸ‘¢', coinsToOpen:2500000},
-  {weight:800, quality:160, id:'HOT_POTATO_BOOK', name:'Hot Potato Book', market:'bz', rarity:'uncommon', icon:'ðŸ¥”', coinsToOpen:2000000},
-  {weight:400, quality:160, id:'WITHER_CATALYST', name:'Wither Catalyst', market:'bz', rarity:'uncommon', icon:'âš—ï¸', coinsToOpen:2000000},
-  {weight:1200, quality:140, id:'PRECURSOR_GEAR', name:'Precursor Gear', market:'bz', rarity:'uncommon', icon:'âš™ï¸', coinsToOpen:2000000},
-  {weight:1000, quality:120, id:'COMBO_BOOK', name:'Combo II Book', market:'bz', rarity:'uncommon', icon:'ðŸ“˜', coinsToOpen:2000000},
-  {weight:400, quality:120, id:'NO_PAIN_NO_GAIN_BOOK', name:'No Pain No Gain II', market:'bz', rarity:'uncommon', icon:'ðŸ“˜', coinsToOpen:2000000},
-  {weight:1000, quality:100, id:'LAST_STAND_BOOK', name:'Last Stand II Book', market:'bz', rarity:'uncommon', icon:'ðŸ“˜', coinsToOpen:2000000},
-  {weight:1000, quality:100, id:'REJUVENATE_BOOK', name:'Rejuvenate III Book', market:'bz', rarity:'uncommon', icon:'ðŸ“˜', coinsToOpen:2000000},
-  {weight:800, quality:100, id:'ULTIMATE_WISE_BOOK', name:'Ultimate Wise II Book', market:'bz', rarity:'uncommon', icon:'ðŸ“™', coinsToOpen:2000000},
-  {weight:600, quality:100, id:'ULTIMATE_JERRY_BOOK', name:'Ultimate Jerry III Book', market:'bz', rarity:'uncommon', icon:'ðŸ“™', coinsToOpen:2000000},
-  {weight:500, quality:100, id:'BANK_BOOK', name:'Bank III Book', market:'bz', rarity:'uncommon', icon:'ðŸ“˜', coinsToOpen:2000000},
-  {weight:500, quality:100, id:'WISDOM_BOOK', name:'Wisdom II Book', market:'bz', rarity:'uncommon', icon:'ðŸ“˜', coinsToOpen:2000000},
-  {weight:1000, quality:80, id:'INFINITE_QUIVER_BOOK', name:'Inf. Quiver VII Book', market:'bz', rarity:'uncommon', icon:'ðŸ“˜', coinsToOpen:2000000},
-  {weight:320, quality:80, id:'FEATHER_FALLING_BOOK', name:'Feather Fall VII Book', market:'bz', rarity:'uncommon', icon:'ðŸ“˜', coinsToOpen:2000000},
-  {weight:10, quality:61, id:'GOLDOR_THE_FISH', name:'Goldor The Fish', market:'ignore', rarity:'rare', icon:'ðŸŸ', coinsToOpen:2000000},
-  {weight:10, quality:61, id:'MAXOR_THE_FISH', name:'Maxor The Fish', market:'ignore', rarity:'rare', icon:'ðŸŸ', coinsToOpen:2000000},
-  {weight:10, quality:61, id:'STORM_THE_FISH', name:'Storm The Fish', market:'ignore', rarity:'rare', icon:'ðŸŸ', coinsToOpen:2000000},
-  {weight:1400, quality:40, id:'WITHER_ESSENCE', name:'Wither Essence (5)', market:'bz', rarity:'uncommon', icon:'âœ¨', coinsToOpen:0, qty:5, bonusDrop:true},
-  {weight:1200, quality:40, id:'UNDEAD_ESSENCE', name:'Undead Essence (20)', market:'bz', rarity:'uncommon', icon:'âœ¨', coinsToOpen:0, qty:20, bonusDrop:true},
+  {weight:15, quality:360, id:'NECRONS_HANDLE', name:"Necron's Handle", market:'ah', rarity:'legendary', icon:'Ã°Å¸â€™â‚¬', coinsToOpen:100000000},
+  {weight:20, quality:350, id:'IMPLOSION_SCROLL', name:'Implosion Scroll', market:'bz', rarity:'rare', icon:'Ã°Å¸â€œÅ“', coinsToOpen:50000000},
+  {weight:20, quality:350, id:'SHADOW_WARP_SCROLL', name:'Shadow Warp Scroll', market:'bz', rarity:'rare', icon:'Ã°Å¸â€œÅ“', coinsToOpen:50000000},
+  {weight:20, quality:350, id:'WITHER_SHIELD_SCROLL', name:'Wither Shield Scroll', market:'bz', rarity:'rare', icon:'Ã°Å¸â€œÅ“', coinsToOpen:50000000},
+  {weight:80, quality:330, id:'AUTO_RECOMBOBULATOR', name:'Auto Recombobulator', market:'ah', rarity:'rare', icon:'Ã¢Å¡â„¢Ã¯Â¸Â', coinsToOpen:10000000},
+  {weight:80, quality:310, id:'WITHER_CHESTPLATE', name:'Wither Chestplate', market:'ah', rarity:'rare', icon:'Ã°Å¸Â§Â¥', coinsToOpen:10000000},
+  {weight:80, quality:290, id:'ONE_FOR_ALL_BOOK', name:'One For All Book', market:'bz', rarity:'rare', icon:'Ã°Å¸â€œâ€”', coinsToOpen:2000000},
+  {weight:400, quality:250, id:'RECOMBOBULATOR_3000', name:'Recombobulator 3000', market:'bz', rarity:'uncommon', icon:'Ã°Å¸â€Â®', coinsToOpen:6000000},
+  {weight:320, quality:250, id:'WITHER_LEGGINGS', name:'Wither Leggings', market:'ah', rarity:'rare', icon:'Ã°Å¸â€˜â€“', coinsToOpen:6000000},
+  {weight:480, quality:230, id:'WITHER_CLOAK_SWORD', name:'Wither Cloak Sword', market:'ah', rarity:'rare', icon:'Ã¢Å¡â€Ã¯Â¸Â', coinsToOpen:4500000},
+  {weight:480, quality:210, id:'WITHER_BLOOD', name:'Wither Blood', market:'bz', rarity:'rare', icon:'Ã°Å¸Â©Â¸', coinsToOpen:3000000},
+  {weight:480, quality:210, id:'WITHER_HELMET', name:'Wither Helmet', market:'ah', rarity:'rare', icon:'Ã¢â€ºâ€˜Ã¯Â¸Â', coinsToOpen:4000000},
+  {weight:800, quality:180, id:'SOUL_EATER_BOOK', name:'Soul Eater Book', market:'bz', rarity:'uncommon', icon:'Ã°Å¸â€œâ€¢', coinsToOpen:2000000},
+  {weight:400, quality:175, id:'FUMING_POTATO_BOOK', name:'Fuming Potato Book', market:'bz', rarity:'uncommon', icon:'Ã°Å¸Â¥â€', coinsToOpen:2000000},
+  {weight:480, quality:170, id:'WITHER_BOOTS', name:'Wither Boots', market:'ah', rarity:'rare', icon:'Ã°Å¸â€˜Â¢', coinsToOpen:2500000},
+  {weight:800, quality:160, id:'HOT_POTATO_BOOK', name:'Hot Potato Book', market:'bz', rarity:'uncommon', icon:'Ã°Å¸Â¥â€', coinsToOpen:2000000},
+  {weight:400, quality:160, id:'WITHER_CATALYST', name:'Wither Catalyst', market:'bz', rarity:'uncommon', icon:'Ã¢Å¡â€”Ã¯Â¸Â', coinsToOpen:2000000},
+  {weight:1200, quality:140, id:'PRECURSOR_GEAR', name:'Precursor Gear', market:'bz', rarity:'uncommon', icon:'Ã¢Å¡â„¢Ã¯Â¸Â', coinsToOpen:2000000},
+  {weight:1000, quality:120, id:'COMBO_BOOK', name:'Combo II Book', market:'bz', rarity:'uncommon', icon:'Ã°Å¸â€œËœ', coinsToOpen:2000000},
+  {weight:400, quality:120, id:'NO_PAIN_NO_GAIN_BOOK', name:'No Pain No Gain II', market:'bz', rarity:'uncommon', icon:'Ã°Å¸â€œËœ', coinsToOpen:2000000},
+  {weight:1000, quality:100, id:'LAST_STAND_BOOK', name:'Last Stand II Book', market:'bz', rarity:'uncommon', icon:'Ã°Å¸â€œËœ', coinsToOpen:2000000},
+  {weight:1000, quality:100, id:'REJUVENATE_BOOK', name:'Rejuvenate III Book', market:'bz', rarity:'uncommon', icon:'Ã°Å¸â€œËœ', coinsToOpen:2000000},
+  {weight:800, quality:100, id:'ULTIMATE_WISE_BOOK', name:'Ultimate Wise II Book', market:'bz', rarity:'uncommon', icon:'Ã°Å¸â€œâ„¢', coinsToOpen:2000000},
+  {weight:600, quality:100, id:'ULTIMATE_JERRY_BOOK', name:'Ultimate Jerry III Book', market:'bz', rarity:'uncommon', icon:'Ã°Å¸â€œâ„¢', coinsToOpen:2000000},
+  {weight:500, quality:100, id:'BANK_BOOK', name:'Bank III Book', market:'bz', rarity:'uncommon', icon:'Ã°Å¸â€œËœ', coinsToOpen:2000000},
+  {weight:500, quality:100, id:'WISDOM_BOOK', name:'Wisdom II Book', market:'bz', rarity:'uncommon', icon:'Ã°Å¸â€œËœ', coinsToOpen:2000000},
+  {weight:1000, quality:80, id:'INFINITE_QUIVER_BOOK', name:'Inf. Quiver VII Book', market:'bz', rarity:'uncommon', icon:'Ã°Å¸â€œËœ', coinsToOpen:2000000},
+  {weight:320, quality:80, id:'FEATHER_FALLING_BOOK', name:'Feather Fall VII Book', market:'bz', rarity:'uncommon', icon:'Ã°Å¸â€œËœ', coinsToOpen:2000000},
+  {weight:10, quality:61, id:'GOLDOR_THE_FISH', name:'Goldor The Fish', market:'ignore', rarity:'rare', icon:'Ã°Å¸ÂÅ¸', coinsToOpen:2000000},
+  {weight:10, quality:61, id:'MAXOR_THE_FISH', name:'Maxor The Fish', market:'ignore', rarity:'rare', icon:'Ã°Å¸ÂÅ¸', coinsToOpen:2000000},
+  {weight:10, quality:61, id:'STORM_THE_FISH', name:'Storm The Fish', market:'ignore', rarity:'rare', icon:'Ã°Å¸ÂÅ¸', coinsToOpen:2000000},
+  {weight:1400, quality:40, id:'WITHER_ESSENCE', name:'Wither Essence (5)', market:'bz', rarity:'uncommon', icon:'Ã¢Å“Â¨', coinsToOpen:0, qty:5, bonusDrop:true},
+  {weight:1200, quality:40, id:'UNDEAD_ESSENCE', name:'Undead Essence (20)', market:'bz', rarity:'uncommon', icon:'Ã¢Å“Â¨', coinsToOpen:0, qty:20, bonusDrop:true},
 ];
 
 const M7_BEDROCK_LOOT = [
-  {weight:25, quality:380, id:'IMPLOSION_SCROLL', name:'Implosion', market:'bz', rarity:'rare', icon:'ðŸ“œ', coinsToOpen:50000000},
-  {weight:25, quality:380, id:'SHADOW_WARP_SCROLL', name:'Shadow Warp', market:'bz', rarity:'rare', icon:'ðŸ“œ', coinsToOpen:50000000},
-  {weight:25, quality:380, id:'WITHER_SHIELD_SCROLL', name:'Wither Shield', market:'bz', rarity:'rare', icon:'ðŸ“œ', coinsToOpen:50000000},
-  {weight:18, quality:380, id:'NECRONS_HANDLE', name:"Necron's Handle", market:'ah', rarity:'legendary', icon:'ðŸ’€', coinsToOpen:100000000},
-  {weight:10, quality:360, id:'DARK_CLAYMORE', name:'Dark Claymore', market:'ah', rarity:'legendary', icon:'ðŸ—¡ï¸', coinsToOpen:150000000},
-  {weight:80, quality:330, id:'AUTO_RECOMBOBULATOR', name:'Auto Recombobulator', market:'ah', rarity:'rare', icon:'âš™ï¸', coinsToOpen:10000000},
-  {weight:30, quality:320, id:'FIFTH_MASTER_STAR', name:'Fifth Master Star', market:'bz', rarity:'rare', icon:'â­', coinsToOpen:9000000},
-  {weight:80, quality:310, id:'WITHER_CHESTPLATE', name:'Wither Chestplate', market:'ah', rarity:'rare', icon:'ðŸ§¥', coinsToOpen:10000000},
-  {weight:80, quality:290, id:'ONE_FOR_ALL_BOOK', name:'One For All Book', market:'bz', rarity:'rare', icon:'ðŸ“—', coinsToOpen:2000000},
-  {weight:500, quality:250, id:'RECOMBOBULATOR_3000', name:'Recombobulator 3000', market:'bz', rarity:'uncommon', icon:'ðŸ”®', coinsToOpen:6000000},
-  {weight:320, quality:250, id:'WITHER_LEGGINGS', name:'Wither Leggings', market:'ah', rarity:'rare', icon:'ðŸ‘–', coinsToOpen:6000000},
-  {weight:24, quality:250, id:'MASTER_SKULL_TIER_5', name:'Master Skull - Tier 5', market:'ah', rarity:'rare', icon:'ðŸ’€', coinsToOpen:32000000},
-  {weight:480, quality:230, id:'WITHER_CLOAK_SWORD', name:'Wither Cloak Sword', market:'ah', rarity:'rare', icon:'âš”ï¸', coinsToOpen:4500000},
-  {weight:480, quality:210, id:'WITHER_BLOOD', name:'Wither Blood', market:'bz', rarity:'rare', icon:'ðŸ©¸', coinsToOpen:3000000},
-  {weight:480, quality:210, id:'WITHER_HELMET', name:'Wither Helmet', market:'ah', rarity:'rare', icon:'â›‘ï¸', coinsToOpen:4000000},
-  {weight:20, quality:200, id:'THUNDERLORD_VII_BOOK', name:'Thunderlord VII Book', market:'bz', rarity:'rare', icon:'ðŸ“˜', coinsToOpen:2000000},
-  {weight:800, quality:180, id:'SOUL_EATER_4_BOOK', name:'Soul Eater IV Book', market:'bz', rarity:'uncommon', icon:'ðŸ“•', coinsToOpen:2000000},
-  {weight:400, quality:175, id:'FUMING_POTATO_BOOK', name:'Fuming Potato Book', market:'bz', rarity:'uncommon', icon:'ðŸ¥”', coinsToOpen:2000000},
-  {weight:480, quality:170, id:'WITHER_BOOTS', name:'Wither Boots', market:'ah', rarity:'rare', icon:'ðŸ‘¢', coinsToOpen:2500000},
-  {weight:800, quality:160, id:'HOT_POTATO_BOOK', name:'Hot Potato Book', market:'bz', rarity:'uncommon', icon:'ðŸ¥”', coinsToOpen:2000000},
-  {weight:400, quality:160, id:'WITHER_CATALYST', name:'Wither Catalyst', market:'bz', rarity:'uncommon', icon:'âš—ï¸', coinsToOpen:2000000},
-  {weight:1200, quality:140, id:'PRECURSOR_GEAR', name:'Precursor Gear', market:'bz', rarity:'uncommon', icon:'âš™ï¸', coinsToOpen:2000000},
-  {weight:1000, quality:120, id:'COMBO_2_BOOK', name:'Combo II Book', market:'bz', rarity:'uncommon', icon:'ðŸ“˜', coinsToOpen:2000000},
-  {weight:400, quality:120, id:'NO_PAIN_NO_GAIN_2_BOOK', name:'No Pain No Gain II', market:'bz', rarity:'uncommon', icon:'ðŸ“˜', coinsToOpen:2000000},
-  {weight:1000, quality:100, id:'LAST_STAND_1_BOOK', name:'Last Stand I Book', market:'bz', rarity:'uncommon', icon:'ðŸ“˜', coinsToOpen:2000000},
-  {weight:1000, quality:100, id:'REJUVENATE_3_BOOK', name:'Rejuvenate III Book', market:'bz', rarity:'uncommon', icon:'ðŸ“˜', coinsToOpen:2000000},
-  {weight:800, quality:100, id:'ULTIMATE_WISE_2_BOOK', name:'Ultimate Wise II Book', market:'bz', rarity:'uncommon', icon:'ðŸ“™', coinsToOpen:2000000},
-  {weight:600, quality:100, id:'ULTIMATE_JERRY_3_BOOK', name:'Ultimate Jerry III Book', market:'bz', rarity:'uncommon', icon:'ðŸ“™', coinsToOpen:2000000},
-  {weight:500, quality:100, id:'BANK_2_BOOK', name:'Bank II Book', market:'bz', rarity:'uncommon', icon:'ðŸ“˜', coinsToOpen:2000000},
-  {weight:500, quality:100, id:'WISDOM_2_BOOK', name:'Wisdom II Book', market:'bz', rarity:'uncommon', icon:'ðŸ“˜', coinsToOpen:2000000},
-  {weight:1000, quality:80, id:'INFINITE_QUIVER_7_BOOK', name:'Infinite Quiver VII Book', market:'bz', rarity:'uncommon', icon:'ðŸ“˜', coinsToOpen:2000000},
-  {weight:320, quality:80, id:'FEATHER_FALLING_7_BOOK', name:'Feather Falling VII Book', market:'bz', rarity:'uncommon', icon:'ðŸ“˜', coinsToOpen:2000000},
-  {weight:5, quality:61, id:'GOLDOR_THE_FISH', name:'Goldor The Fish', market:'ignore', rarity:'rare', icon:'ðŸŸ', coinsToOpen:2000000},
-  {weight:5, quality:61, id:'MAXOR_THE_FISH', name:'Maxor The Fish', market:'ignore', rarity:'rare', icon:'ðŸŸ', coinsToOpen:2000000},
-  {weight:5, quality:61, id:'STORM_THE_FISH', name:'Storm The Fish', market:'ignore', rarity:'rare', icon:'ðŸŸ', coinsToOpen:2000000},
-  {weight:1, quality:10, id:'WITHER_ESSENCE', name:'Wither Essence (1)', market:'bz', rarity:'uncommon', icon:'âœ¨', coinsToOpen:0, qty:1, bonusDrop:true},
-  {weight:0, quality:1, id:'UNDEAD_ESSENCE_SINGLE', name:'Undead Essence (1)', market:'bz', rarity:'uncommon', icon:'âœ¨', coinsToOpen:0, qty:1, bonusDrop:true, priceId:'UNDEAD_ESSENCE'},
+  {weight:25, quality:380, id:'IMPLOSION_SCROLL', name:'Implosion', market:'bz', rarity:'rare', icon:'Ã°Å¸â€œÅ“', coinsToOpen:50000000},
+  {weight:25, quality:380, id:'SHADOW_WARP_SCROLL', name:'Shadow Warp', market:'bz', rarity:'rare', icon:'Ã°Å¸â€œÅ“', coinsToOpen:50000000},
+  {weight:25, quality:380, id:'WITHER_SHIELD_SCROLL', name:'Wither Shield', market:'bz', rarity:'rare', icon:'Ã°Å¸â€œÅ“', coinsToOpen:50000000},
+  {weight:18, quality:380, id:'NECRONS_HANDLE', name:"Necron's Handle", market:'ah', rarity:'legendary', icon:'Ã°Å¸â€™â‚¬', coinsToOpen:100000000},
+  {weight:10, quality:360, id:'DARK_CLAYMORE', name:'Dark Claymore', market:'ah', rarity:'legendary', icon:'Ã°Å¸â€”Â¡Ã¯Â¸Â', coinsToOpen:150000000},
+  {weight:80, quality:330, id:'AUTO_RECOMBOBULATOR', name:'Auto Recombobulator', market:'ah', rarity:'rare', icon:'Ã¢Å¡â„¢Ã¯Â¸Â', coinsToOpen:10000000},
+  {weight:30, quality:320, id:'FIFTH_MASTER_STAR', name:'Fifth Master Star', market:'bz', rarity:'rare', icon:'Ã¢Â­Â', coinsToOpen:9000000},
+  {weight:80, quality:310, id:'WITHER_CHESTPLATE', name:'Wither Chestplate', market:'ah', rarity:'rare', icon:'Ã°Å¸Â§Â¥', coinsToOpen:10000000},
+  {weight:80, quality:290, id:'ONE_FOR_ALL_BOOK', name:'One For All Book', market:'bz', rarity:'rare', icon:'Ã°Å¸â€œâ€”', coinsToOpen:2000000},
+  {weight:500, quality:250, id:'RECOMBOBULATOR_3000', name:'Recombobulator 3000', market:'bz', rarity:'uncommon', icon:'Ã°Å¸â€Â®', coinsToOpen:6000000},
+  {weight:320, quality:250, id:'WITHER_LEGGINGS', name:'Wither Leggings', market:'ah', rarity:'rare', icon:'Ã°Å¸â€˜â€“', coinsToOpen:6000000},
+  {weight:24, quality:250, id:'MASTER_SKULL_TIER_5', name:'Master Skull - Tier 5', market:'ah', rarity:'rare', icon:'Ã°Å¸â€™â‚¬', coinsToOpen:32000000},
+  {weight:480, quality:230, id:'WITHER_CLOAK_SWORD', name:'Wither Cloak Sword', market:'ah', rarity:'rare', icon:'Ã¢Å¡â€Ã¯Â¸Â', coinsToOpen:4500000},
+  {weight:480, quality:210, id:'WITHER_BLOOD', name:'Wither Blood', market:'bz', rarity:'rare', icon:'Ã°Å¸Â©Â¸', coinsToOpen:3000000},
+  {weight:480, quality:210, id:'WITHER_HELMET', name:'Wither Helmet', market:'ah', rarity:'rare', icon:'Ã¢â€ºâ€˜Ã¯Â¸Â', coinsToOpen:4000000},
+  {weight:20, quality:200, id:'THUNDERLORD_VII_BOOK', name:'Thunderlord VII Book', market:'bz', rarity:'rare', icon:'Ã°Å¸â€œËœ', coinsToOpen:2000000},
+  {weight:800, quality:180, id:'SOUL_EATER_4_BOOK', name:'Soul Eater IV Book', market:'bz', rarity:'uncommon', icon:'Ã°Å¸â€œâ€¢', coinsToOpen:2000000},
+  {weight:400, quality:175, id:'FUMING_POTATO_BOOK', name:'Fuming Potato Book', market:'bz', rarity:'uncommon', icon:'Ã°Å¸Â¥â€', coinsToOpen:2000000},
+  {weight:480, quality:170, id:'WITHER_BOOTS', name:'Wither Boots', market:'ah', rarity:'rare', icon:'Ã°Å¸â€˜Â¢', coinsToOpen:2500000},
+  {weight:800, quality:160, id:'HOT_POTATO_BOOK', name:'Hot Potato Book', market:'bz', rarity:'uncommon', icon:'Ã°Å¸Â¥â€', coinsToOpen:2000000},
+  {weight:400, quality:160, id:'WITHER_CATALYST', name:'Wither Catalyst', market:'bz', rarity:'uncommon', icon:'Ã¢Å¡â€”Ã¯Â¸Â', coinsToOpen:2000000},
+  {weight:1200, quality:140, id:'PRECURSOR_GEAR', name:'Precursor Gear', market:'bz', rarity:'uncommon', icon:'Ã¢Å¡â„¢Ã¯Â¸Â', coinsToOpen:2000000},
+  {weight:1000, quality:120, id:'COMBO_2_BOOK', name:'Combo II Book', market:'bz', rarity:'uncommon', icon:'Ã°Å¸â€œËœ', coinsToOpen:2000000},
+  {weight:400, quality:120, id:'NO_PAIN_NO_GAIN_2_BOOK', name:'No Pain No Gain II', market:'bz', rarity:'uncommon', icon:'Ã°Å¸â€œËœ', coinsToOpen:2000000},
+  {weight:1000, quality:100, id:'LAST_STAND_1_BOOK', name:'Last Stand I Book', market:'bz', rarity:'uncommon', icon:'Ã°Å¸â€œËœ', coinsToOpen:2000000},
+  {weight:1000, quality:100, id:'REJUVENATE_3_BOOK', name:'Rejuvenate III Book', market:'bz', rarity:'uncommon', icon:'Ã°Å¸â€œËœ', coinsToOpen:2000000},
+  {weight:800, quality:100, id:'ULTIMATE_WISE_2_BOOK', name:'Ultimate Wise II Book', market:'bz', rarity:'uncommon', icon:'Ã°Å¸â€œâ„¢', coinsToOpen:2000000},
+  {weight:600, quality:100, id:'ULTIMATE_JERRY_3_BOOK', name:'Ultimate Jerry III Book', market:'bz', rarity:'uncommon', icon:'Ã°Å¸â€œâ„¢', coinsToOpen:2000000},
+  {weight:500, quality:100, id:'BANK_2_BOOK', name:'Bank II Book', market:'bz', rarity:'uncommon', icon:'Ã°Å¸â€œËœ', coinsToOpen:2000000},
+  {weight:500, quality:100, id:'WISDOM_2_BOOK', name:'Wisdom II Book', market:'bz', rarity:'uncommon', icon:'Ã°Å¸â€œËœ', coinsToOpen:2000000},
+  {weight:1000, quality:80, id:'INFINITE_QUIVER_7_BOOK', name:'Infinite Quiver VII Book', market:'bz', rarity:'uncommon', icon:'Ã°Å¸â€œËœ', coinsToOpen:2000000},
+  {weight:320, quality:80, id:'FEATHER_FALLING_7_BOOK', name:'Feather Falling VII Book', market:'bz', rarity:'uncommon', icon:'Ã°Å¸â€œËœ', coinsToOpen:2000000},
+  {weight:5, quality:61, id:'GOLDOR_THE_FISH', name:'Goldor The Fish', market:'ignore', rarity:'rare', icon:'Ã°Å¸ÂÅ¸', coinsToOpen:2000000},
+  {weight:5, quality:61, id:'MAXOR_THE_FISH', name:'Maxor The Fish', market:'ignore', rarity:'rare', icon:'Ã°Å¸ÂÅ¸', coinsToOpen:2000000},
+  {weight:5, quality:61, id:'STORM_THE_FISH', name:'Storm The Fish', market:'ignore', rarity:'rare', icon:'Ã°Å¸ÂÅ¸', coinsToOpen:2000000},
+  {weight:1, quality:10, id:'WITHER_ESSENCE', name:'Wither Essence (1)', market:'bz', rarity:'uncommon', icon:'Ã¢Å“Â¨', coinsToOpen:0, qty:1, bonusDrop:true},
+  {weight:0, quality:1, id:'UNDEAD_ESSENCE_SINGLE', name:'Undead Essence (1)', market:'bz', rarity:'uncommon', icon:'Ã¢Å“Â¨', coinsToOpen:0, qty:1, bonusDrop:true, priceId:'UNDEAD_ESSENCE'},
 ];
 
 const M7_OBSIDIAN_LOOT = [
-  {weight:1, quality:320, id:'FIFTH_MASTER_STAR', name:'Fifth Master Star', market:'bz', rarity:'rare', icon:'â­', coinsToOpen:9000000},
-  {weight:1, quality:310, id:'WITHER_CHESTPLATE', name:'Wither Chestplate', market:'ah', rarity:'rare', icon:'ðŸ§¥', coinsToOpen:10000000},
-  {weight:1, quality:290, id:'ONE_FOR_ALL_BOOK', name:'One For All Book', market:'bz', rarity:'rare', icon:'ðŸ“—', coinsToOpen:2000000},
-  {weight:4, quality:250, id:'MASTER_SKULL_TIER_4', name:'Master Skull - Tier 4', market:'ah', rarity:'rare', icon:'ðŸ’€', coinsToOpen:8000000},
-  {weight:4, quality:250, id:'WITHER_LEGGINGS', name:'Wither Leggings', market:'ah', rarity:'rare', icon:'ðŸ‘–', coinsToOpen:6000000},
-  {weight:2, quality:250, id:'RECOMBOBULATOR_3000', name:'Recombobulator 3000', market:'bz', rarity:'uncommon', icon:'ðŸ”®', coinsToOpen:6000000},
-  {weight:6, quality:230, id:'WITHER_CLOAK_SWORD', name:'Wither Cloak Sword', market:'ah', rarity:'rare', icon:'âš”ï¸', coinsToOpen:4500000},
-  {weight:6, quality:210, id:'WITHER_BLOOD', name:'Wither Blood', market:'bz', rarity:'rare', icon:'ðŸ©¸', coinsToOpen:2500000},
-  {weight:6, quality:210, id:'WITHER_HELMET', name:'Wither Helmet', market:'ah', rarity:'rare', icon:'â›‘ï¸', coinsToOpen:4000000},
-  {weight:14, quality:180, id:'SOUL_EATER_1_BOOK', name:'Soul Eater I Book', market:'bz', rarity:'uncommon', icon:'ðŸ“•', coinsToOpen:1000000},
-  {weight:14, quality:175, id:'FUMING_POTATO_BOOK', name:'Fuming Potato Book', market:'bz', rarity:'uncommon', icon:'ðŸ¥”', coinsToOpen:1000000},
-  {weight:14, quality:170, id:'WITHER_BOOTS', name:'Wither Boots', market:'ah', rarity:'rare', icon:'ðŸ‘¢', coinsToOpen:2500000},
-  {weight:14, quality:160, id:'WITHER_CATALYST', name:'Wither Catalyst', market:'bz', rarity:'uncommon', icon:'âš—ï¸', coinsToOpen:1000000},
-  {weight:10, quality:160, id:'HOT_POTATO_BOOK', name:'Hot Potato Book', market:'bz', rarity:'uncommon', icon:'ðŸ¥”', coinsToOpen:1000000},
-  {weight:16, quality:140, id:'PRECURSOR_GEAR', name:'Precursor Gear', market:'bz', rarity:'uncommon', icon:'âš™ï¸', coinsToOpen:1000000},
-  {weight:32, quality:120, id:'COMBO_1_BOOK', name:'Combo I Book', market:'bz', rarity:'uncommon', icon:'ðŸ“˜', coinsToOpen:1000000},
-  {weight:10, quality:120, id:'NO_PAIN_NO_GAIN_1_BOOK', name:'No Pain No Gain I', market:'bz', rarity:'uncommon', icon:'ðŸ“˜', coinsToOpen:1000000},
-  {weight:50, quality:100, id:'REJUVENATE_1_BOOK', name:'Rejuvenate I Book', market:'bz', rarity:'uncommon', icon:'ðŸ“˜', coinsToOpen:1000000},
-  {weight:40, quality:100, id:'ULTIMATE_WISE_1_BOOK', name:'Ultimate Wise I Book', market:'bz', rarity:'uncommon', icon:'ðŸ“™', coinsToOpen:1000000},
-  {weight:30, quality:100, id:'LAST_STAND_1_BOOK', name:'Last Stand I Book', market:'bz', rarity:'uncommon', icon:'ðŸ“˜', coinsToOpen:1000000},
-  {weight:15, quality:100, id:'ULTIMATE_BANK_2_BOOK', name:'Ultimate Bank II Book', market:'bz', rarity:'uncommon', icon:'ðŸ“™', coinsToOpen:1000000},
-  {weight:15, quality:100, id:'WISDOM_1_BOOK', name:'Wisdom I Book', market:'bz', rarity:'uncommon', icon:'ðŸ“˜', coinsToOpen:1000000},
-  {weight:8, quality:100, id:'ULTIMATE_JERRY_2_BOOK', name:'Ultimate Jerry II Book', market:'bz', rarity:'uncommon', icon:'ðŸ“™', coinsToOpen:1000000},
-  {weight:1, quality:10, id:'WITHER_ESSENCE', name:'Wither Essence (1)', market:'bz', rarity:'uncommon', icon:'âœ¨', coinsToOpen:0, qty:1, bonusDrop:true},
-  {weight:0, quality:1, id:'UNDEAD_ESSENCE_SINGLE', name:'Undead Essence (1)', market:'bz', rarity:'uncommon', icon:'âœ¨', coinsToOpen:0, qty:1, bonusDrop:true, priceId:'UNDEAD_ESSENCE'},
+  {weight:1, quality:320, id:'FIFTH_MASTER_STAR', name:'Fifth Master Star', market:'bz', rarity:'rare', icon:'Ã¢Â­Â', coinsToOpen:9000000},
+  {weight:1, quality:310, id:'WITHER_CHESTPLATE', name:'Wither Chestplate', market:'ah', rarity:'rare', icon:'Ã°Å¸Â§Â¥', coinsToOpen:10000000},
+  {weight:1, quality:290, id:'ONE_FOR_ALL_BOOK', name:'One For All Book', market:'bz', rarity:'rare', icon:'Ã°Å¸â€œâ€”', coinsToOpen:2000000},
+  {weight:4, quality:250, id:'MASTER_SKULL_TIER_4', name:'Master Skull - Tier 4', market:'ah', rarity:'rare', icon:'Ã°Å¸â€™â‚¬', coinsToOpen:8000000},
+  {weight:4, quality:250, id:'WITHER_LEGGINGS', name:'Wither Leggings', market:'ah', rarity:'rare', icon:'Ã°Å¸â€˜â€“', coinsToOpen:6000000},
+  {weight:2, quality:250, id:'RECOMBOBULATOR_3000', name:'Recombobulator 3000', market:'bz', rarity:'uncommon', icon:'Ã°Å¸â€Â®', coinsToOpen:6000000},
+  {weight:6, quality:230, id:'WITHER_CLOAK_SWORD', name:'Wither Cloak Sword', market:'ah', rarity:'rare', icon:'Ã¢Å¡â€Ã¯Â¸Â', coinsToOpen:4500000},
+  {weight:6, quality:210, id:'WITHER_BLOOD', name:'Wither Blood', market:'bz', rarity:'rare', icon:'Ã°Å¸Â©Â¸', coinsToOpen:2500000},
+  {weight:6, quality:210, id:'WITHER_HELMET', name:'Wither Helmet', market:'ah', rarity:'rare', icon:'Ã¢â€ºâ€˜Ã¯Â¸Â', coinsToOpen:4000000},
+  {weight:14, quality:180, id:'SOUL_EATER_1_BOOK', name:'Soul Eater I Book', market:'bz', rarity:'uncommon', icon:'Ã°Å¸â€œâ€¢', coinsToOpen:1000000},
+  {weight:14, quality:175, id:'FUMING_POTATO_BOOK', name:'Fuming Potato Book', market:'bz', rarity:'uncommon', icon:'Ã°Å¸Â¥â€', coinsToOpen:1000000},
+  {weight:14, quality:170, id:'WITHER_BOOTS', name:'Wither Boots', market:'ah', rarity:'rare', icon:'Ã°Å¸â€˜Â¢', coinsToOpen:2500000},
+  {weight:14, quality:160, id:'WITHER_CATALYST', name:'Wither Catalyst', market:'bz', rarity:'uncommon', icon:'Ã¢Å¡â€”Ã¯Â¸Â', coinsToOpen:1000000},
+  {weight:10, quality:160, id:'HOT_POTATO_BOOK', name:'Hot Potato Book', market:'bz', rarity:'uncommon', icon:'Ã°Å¸Â¥â€', coinsToOpen:1000000},
+  {weight:16, quality:140, id:'PRECURSOR_GEAR', name:'Precursor Gear', market:'bz', rarity:'uncommon', icon:'Ã¢Å¡â„¢Ã¯Â¸Â', coinsToOpen:1000000},
+  {weight:32, quality:120, id:'COMBO_1_BOOK', name:'Combo I Book', market:'bz', rarity:'uncommon', icon:'Ã°Å¸â€œËœ', coinsToOpen:1000000},
+  {weight:10, quality:120, id:'NO_PAIN_NO_GAIN_1_BOOK', name:'No Pain No Gain I', market:'bz', rarity:'uncommon', icon:'Ã°Å¸â€œËœ', coinsToOpen:1000000},
+  {weight:50, quality:100, id:'REJUVENATE_1_BOOK', name:'Rejuvenate I Book', market:'bz', rarity:'uncommon', icon:'Ã°Å¸â€œËœ', coinsToOpen:1000000},
+  {weight:40, quality:100, id:'ULTIMATE_WISE_1_BOOK', name:'Ultimate Wise I Book', market:'bz', rarity:'uncommon', icon:'Ã°Å¸â€œâ„¢', coinsToOpen:1000000},
+  {weight:30, quality:100, id:'LAST_STAND_1_BOOK', name:'Last Stand I Book', market:'bz', rarity:'uncommon', icon:'Ã°Å¸â€œËœ', coinsToOpen:1000000},
+  {weight:15, quality:100, id:'ULTIMATE_BANK_2_BOOK', name:'Ultimate Bank II Book', market:'bz', rarity:'uncommon', icon:'Ã°Å¸â€œâ„¢', coinsToOpen:1000000},
+  {weight:15, quality:100, id:'WISDOM_1_BOOK', name:'Wisdom I Book', market:'bz', rarity:'uncommon', icon:'Ã°Å¸â€œËœ', coinsToOpen:1000000},
+  {weight:8, quality:100, id:'ULTIMATE_JERRY_2_BOOK', name:'Ultimate Jerry II Book', market:'bz', rarity:'uncommon', icon:'Ã°Å¸â€œâ„¢', coinsToOpen:1000000},
+  {weight:1, quality:10, id:'WITHER_ESSENCE', name:'Wither Essence (1)', market:'bz', rarity:'uncommon', icon:'Ã¢Å“Â¨', coinsToOpen:0, qty:1, bonusDrop:true},
+  {weight:0, quality:1, id:'UNDEAD_ESSENCE_SINGLE', name:'Undead Essence (1)', market:'bz', rarity:'uncommon', icon:'Ã¢Å“Â¨', coinsToOpen:0, qty:1, bonusDrop:true, priceId:'UNDEAD_ESSENCE'},
 ];
 
 const M7_S_BEDROCK_LOOT = [
@@ -943,9 +943,9 @@ function renderPriceTable() {
     return `<tr>
       <td><span class="iname ${item.rarity}">${item.name}</span></td>
       <td><span class="mtag ${item.market}">${item.market.toUpperCase()}</span></td>
-      <td style="font-family:'Share Tech Mono';font-size:11px;color:${raw > 0 ? 'var(--accent3)' : 'var(--text3)'}">${raw > 0 ? fmtC(itemNetValue(item)) : '-'}</td>
+      <td style="font-family:'Patrick Hand';font-size:11px;color:${raw > 0 ? 'var(--accent3)' : 'var(--text3)'}">${raw > 0 ? fmtC(itemNetValue(item)) : '-'}</td>
     </tr>`;
-  }).join('') : `<tr><td colspan="3" style="padding:14px;text-align:center;font-family:'Share Tech Mono';font-size:11px;color:var(--text3)">No items to show.</td></tr>`;
+  }).join('') : `<tr><td colspan="3" style="padding:14px;text-align:center;font-family:'Patrick Hand';font-size:11px;color:var(--text3)">No items to show.</td></tr>`;
 }
 
 function runSimulation() {
@@ -1039,7 +1039,7 @@ function runSimulation() {
           const rate = cnt / N * 100;
           const avgProfitContribution = itemProfit(item) * (cnt / N);
           const avgContributionClass = avgProfitContribution >= 0 ? 'var(--accent3)' : 'var(--red)';
-          return `<tr class="drop-breakdown-row ${avgProfitContribution < 0 ? 'neg' : 'pos'}"><td><span class="iname ${item.rarity}">${item.name}</span></td><td style="font-family:'Share Tech Mono';font-size:11px;color:var(--text2)">${cnt.toLocaleString()}</td><td style="font-family:'Share Tech Mono';font-size:11px;color:var(--accent)">${rate.toFixed(2)}%</td><td><div class="bar-track"><div class="bar-fill" style="width:${Math.min(rate / 50 * 100, 100)}%"></div></div></td><td style="font-family:'Share Tech Mono';font-size:11px;color:${avgContributionClass}">${Math.abs(avgProfitContribution) > 100 ? `${avgProfitContribution >= 0 ? '+' : ''}${fmtC(avgProfitContribution)}` : '-'}</td></tr>`;
+          return `<tr class="drop-breakdown-row ${avgProfitContribution < 0 ? 'neg' : 'pos'}"><td><span class="iname ${item.rarity}">${item.name}</span></td><td style="font-family:'Patrick Hand';font-size:11px;color:var(--text2)">${cnt.toLocaleString()}</td><td style="font-family:'Patrick Hand';font-size:11px;color:var(--accent)">${rate.toFixed(2)}%</td><td><div class="bar-track"><div class="bar-fill" style="width:${Math.min(rate / 50 * 100, 100)}%"></div></div></td><td style="font-family:'Patrick Hand';font-size:11px;color:${avgContributionClass}">${Math.abs(avgProfitContribution) > 100 ? `${avgProfitContribution >= 0 ? '+' : ''}${fmtC(avgProfitContribution)}` : '-'}</td></tr>`;
         }).join('')}
         </tbody></table></div></div>
       <div class="panel" style="margin-top:14px"><div class="ph"><div class="dot"></div>RARE DROP TRACKER</div><div class="pb" style="padding:12px">
@@ -1281,7 +1281,7 @@ function runSimulationForSelectedFloor() {
           const rate = cnt / N * 100;
           const avgProfitContribution = (dropContributionSums[item.id] || 0) / N;
           const avgContributionClass = avgProfitContribution >= 0 ? 'var(--accent3)' : 'var(--red)';
-          return `<tr class="drop-breakdown-row ${avgProfitContribution < 0 ? 'neg' : 'pos'}"><td><span class="iname ${item.rarity}">${item.name}</span></td><td style="font-family:'Share Tech Mono';font-size:11px;color:var(--text2)">${cnt.toLocaleString()}</td><td style="font-family:'Share Tech Mono';font-size:11px;color:var(--accent)">${rate.toFixed(2)}%</td><td><div class="bar-track"><div class="bar-fill" style="width:${Math.min(rate / 50 * 100, 100)}%"></div></div></td><td style="font-family:'Share Tech Mono';font-size:11px;color:${avgContributionClass}">${Math.abs(avgProfitContribution) > 100 ? `${avgProfitContribution >= 0 ? '+' : ''}${fmtC(avgProfitContribution)}` : '-'}</td></tr>`;
+          return `<tr class="drop-breakdown-row ${avgProfitContribution < 0 ? 'neg' : 'pos'}"><td><span class="iname ${item.rarity}">${item.name}</span></td><td style="font-family:'Patrick Hand';font-size:11px;color:var(--text2)">${cnt.toLocaleString()}</td><td style="font-family:'Patrick Hand';font-size:11px;color:var(--accent)">${rate.toFixed(2)}%</td><td><div class="bar-track"><div class="bar-fill" style="width:${Math.min(rate / 50 * 100, 100)}%"></div></div></td><td style="font-family:'Patrick Hand';font-size:11px;color:${avgContributionClass}">${Math.abs(avgProfitContribution) > 100 ? `${avgProfitContribution >= 0 ? '+' : ''}${fmtC(avgProfitContribution)}` : '-'}</td></tr>`;
         }).join('')}
         </tbody></table></div></div>
       ${floorSourceBreakdown}
@@ -1341,8 +1341,8 @@ function renderHistogram(results) {
       responsive:true,
       plugins:{legend:{display:false}, tooltip:{callbacks:{label:c => `${c.parsed.y.toLocaleString()} runs`, title:c => `~${c[0].label}`}, backgroundColor:'#141920', borderColor:'#2a3540', borderWidth:1, titleColor:'#c8d8e8', bodyColor:'#7a9ab0'}},
       scales:{
-        x:{ticks:{color:'#4a6070', font:{family:'Share Tech Mono', size:9}, maxRotation:45, maxTicksLimit:10}, grid:{color:'rgba(30,39,48,.8)'}},
-        y:{type:'logarithmic', ticks:{color:'#4a6070', font:{family:'Share Tech Mono', size:9}, callback:function(v){return [1,2,5,10,20,50,100,200,500,1000,2000,5000,10000].includes(v) ? v.toLocaleString() : null;}}, grid:{color:'rgba(30,39,48,.8)'}}
+        x:{ticks:{color:'#4a6070', font:{family:'Patrick Hand', size:9}, maxRotation:45, maxTicksLimit:10}, grid:{color:'rgba(30,39,48,.8)'}},
+        y:{type:'logarithmic', ticks:{color:'#4a6070', font:{family:'Patrick Hand', size:9}, callback:function(v){return [1,2,5,10,20,50,100,200,500,1000,2000,5000,10000].includes(v) ? v.toLocaleString() : null;}}, grid:{color:'rgba(30,39,48,.8)'}}
       }
     }
   });
@@ -1407,11 +1407,11 @@ function renderSimChest(drops, isReroll) {
   const rows = valuableDrops.map(id => {
     const item = getLootItem(simLoot, id);
     const raw = getPrice(id);
-    return `<tr><td><span class="iname ${item.rarity}">${item.name}</span></td><td style="font-family:'Share Tech Mono';font-size:11px;text-align:right;color:var(--accent3)">${raw > 0 ? fmtC(itemNetValue(item)) : 'No price'}</td></tr>`;
+    return `<tr><td><span class="iname ${item.rarity}">${item.name}</span></td><td style="font-family:'Patrick Hand';font-size:11px;text-align:right;color:var(--accent3)">${raw > 0 ? fmtC(itemNetValue(item)) : 'No price'}</td></tr>`;
   });
-  rows.push(`<tr style="border-top:1px solid var(--border2)"><td style="font-family:'Share Tech Mono';font-size:10px;color:var(--text3)">CHEST COST</td><td style="font-family:'Share Tech Mono';font-size:11px;text-align:right;color:var(--red)">-${fmtC(simCurrentCost)}</td></tr>`);
-  rows.push(`<tr><td style="font-family:'Share Tech Mono';font-size:10px;color:var(--text3)">NET PROFIT</td><td style="font-family:'Share Tech Mono';font-size:12px;font-weight:700;text-align:right;color:${profitColor}">${profit >= 0 ? '+' : ''}${fmtC(profit)}</td></tr>`);
-  if (simKismetUsedThisRun) rows.push(`<tr><td style="font-family:'Share Tech Mono';font-size:10px;color:var(--text3)">KISMET COST</td><td style="font-family:'Share Tech Mono';font-size:11px;text-align:right;color:var(--red)">-1.1M</td></tr>`);
+  rows.push(`<tr style="border-top:1px solid var(--border2)"><td style="font-family:'Patrick Hand';font-size:10px;color:var(--text3)">CHEST COST</td><td style="font-family:'Patrick Hand';font-size:11px;text-align:right;color:var(--red)">-${fmtC(simCurrentCost)}</td></tr>`);
+  rows.push(`<tr><td style="font-family:'Patrick Hand';font-size:10px;color:var(--text3)">NET PROFIT</td><td style="font-family:'Patrick Hand';font-size:12px;font-weight:700;text-align:right;color:${profitColor}">${profit >= 0 ? '+' : ''}${fmtC(profit)}</td></tr>`);
+  if (simKismetUsedThisRun) rows.push(`<tr><td style="font-family:'Patrick Hand';font-size:10px;color:var(--text3)">KISMET COST</td><td style="font-family:'Patrick Hand';font-size:11px;text-align:right;color:var(--red)">-1.1M</td></tr>`);
   document.getElementById('chestBreakdown').style.display = 'block';
   document.getElementById('chestBreakTable').innerHTML = `<tbody>${rows.join('')}</tbody>`;
 }
@@ -1467,7 +1467,7 @@ function updateSessionUI() {
     const cls = e.profit >= 0 ? 'pos' : 'neg';
     const icon = e.action === 'OPENED' ? 'OPEN' : 'SKIP';
     return `<div class="log-entry"><span class="log-run">#${e.run}</span><span class="log-action">${icon} ${e.action}</span><span class="log-profit ${cls}">${e.profit >= 0 ? '+' : ''}${fmtC(e.profit)}</span></div>`;
-  }).join('') : `<div style="padding:20px;text-align:center;font-family:'Share Tech Mono';font-size:11px;color:var(--text3)">No runs yet</div>`;
+  }).join('') : `<div style="padding:20px;text-align:center;font-family:'Patrick Hand';font-size:11px;color:var(--text3)">No runs yet</div>`;
 }
 function resetSession() {
   session = { total:0, runs:0, best:-Infinity, log:[] };
@@ -1476,7 +1476,7 @@ function resetSession() {
   document.getElementById('ss-runs').textContent = '0';
   document.getElementById('ss-avg').textContent = '-';
   document.getElementById('ss-best').textContent = '-';
-  document.getElementById('runLog').innerHTML = `<div style="padding:20px;text-align:center;font-family:'Share Tech Mono';font-size:11px;color:var(--text3)">No runs yet</div>`;
+  document.getElementById('runLog').innerHTML = `<div style="padding:20px;text-align:center;font-family:'Patrick Hand';font-size:11px;color:var(--text3)">No runs yet</div>`;
 }
 
 document.getElementById('kismetControls').style.display = 'block';
@@ -1487,3 +1487,5 @@ fetchPrices();
 </script>
 </body>
 </html>
+
+
