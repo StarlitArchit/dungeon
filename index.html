@@ -7,6 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
+  // css starts here
 :root {
   --bg:#1a0f1e; --bg2:#211528; --bg3:#2a1c32;
   --border:#3e2d48; --border2:#5a3d65;
@@ -167,6 +168,8 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
   </div>
 </header>
 
+
+  
 <div class="tabs">
   <div class="tab active" onclick="switchTab('calc')">Profit Calculator</div>
   <div class="tab" onclick="switchTab('sim')">Chest Simulator</div>
@@ -178,7 +181,11 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
       <div class="panel">
         <div class="ph"><div class="dot"></div>SIMULATION SETTINGS</div>
         <div class="pb">
+          
+            // chest floor dropdown 
+          
           <div class="ctrl">
+            
             <label class="clabel">Floor</label>
             <select id="calcFloor" onchange="changeCalcFloor()">
               <option value="f7">Floor 7</option>
@@ -187,8 +194,12 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
               <option value="m4">Master Mode 4</option>
               <option value="m5" disabled>M5 (coming soon)</option>
               <option value="m6" disabled>M6 (coming soon)</option>
+            
             </select>
           </div>
+
+           // number of sim runs
+          
           <div class="ctrl">
             <label class="clabel">Number of Runs</label>
             <input type="number" id="numRuns" value="100000" min="1000" max="1000000" step="1000">
