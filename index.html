@@ -1,0 +1,1489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dungeon Profit Calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg:#1a0f1e; --bg2:#211528; --bg3:#2a1c32;
+  --border:#3e2d48; --border2:#5a3d65;
+  --accent:#ff8cc8; --accent3:#7fff7f;
+  --gold:#ffd700; --purple:#e87fff; --red:#ff4444;
+  --text:#f0ddf0; --text2:#c99abf; --text3:#9a6d90;
+  --pink-glow:rgba(255,140,200,.15);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;font-size:15px;min-height:100vh}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,140,200,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,140,200,.04) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
+.wrap{position:relative;z-index:1;max-width:1400px;margin:0 auto;padding:20px}
+header{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border2)}
+header h1{font-size:26px;font-weight:700;letter-spacing:3px;text-transform:uppercase;background:linear-gradient(135deg,var(--accent),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sub{font-family:'Share Tech Mono';font-size:10px;color:var(--text3);letter-spacing:2px}
+.status-bar{margin-left:auto;display:flex;align-items:center;gap:8px;font-family:'Share Tech Mono';font-size:11px}
+.sdot{width:6px;height:6px;border-radius:50%;background:var(--text3);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.tabs{display:flex;gap:0;margin-bottom:16px;border-bottom:1px solid var(--border2)}
+.tab{padding:10px 24px;font-family:'Share Tech Mono';font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s}
+.tab:hover{color:var(--text2)}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+.panel{background:var(--bg2);border:1px solid var(--border);border-radius:4px;overflow:hidden;margin-bottom:14px}
+.ph{background:var(--bg3);border-bottom:1px solid var(--border);padding:9px 14px;display:flex;align-items:center;gap:8px;font-family:'Share Tech Mono';font-size:10px;letter-spacing:2px;color:var(--text2);text-transform:uppercase}
+.ph .dot{width:5px;height:5px;border-radius:50%;background:var(--accent)}
+.pb{padding:14px}
+.ctrl{margin-bottom:12px}
+.clabel{font-family:'Share Tech Mono';font-size:10px;letter-spacing:1.5px;color:var(--text3);text-transform:uppercase;margin-bottom:5px;display:block}
+input[type=number],select{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:3px;color:var(--text);font-family:'Share Tech Mono';font-size:13px;padding:7px 10px;outline:none;transition:border-color .2s}
+input[type=number]:focus,select:focus{border-color:var(--accent)}
+input[type=range]{width:100%;appearance:none;background:transparent}
+input[type=range]::-webkit-slider-runnable-track{height:6px;background:linear-gradient(90deg,var(--accent),var(--purple));border-radius:999px;border:1px solid var(--border2)}
+input[type=range]::-webkit-slider-thumb{appearance:none;width:16px;height:16px;border-radius:50%;background:#fff;border:2px solid var(--accent);margin-top:-6px;box-shadow:0 0 10px rgba(255,140,200,.25);cursor:pointer}
+input[type=range]::-moz-range-track{height:6px;background:linear-gradient(90deg,var(--accent),var(--purple));border-radius:999px;border:1px solid var(--border2)}
+input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:#fff;border:2px solid var(--accent);box-shadow:0 0 10px rgba(255,140,200,.25);cursor:pointer}
+.slider-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.slider-value{font-family:'Share Tech Mono';font-size:11px;color:var(--accent);letter-spacing:1px}
+.divider{border:none;border-top:1px solid var(--border);margin:12px 0}
+.trow{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border)}
+.trow:last-child{border-bottom:none}
+.tlabel{font-size:13px;color:var(--text2)}
+.toggle{width:36px;height:20px;background:var(--bg3);border:1px solid var(--border2);border-radius:10px;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0}
+.toggle.on{background:var(--accent);border-color:var(--accent)}
+.toggle::after{content:'';position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:#fff;transition:left .2s}
+.toggle.on::after{left:18px}
+.run-btn{width:100%;padding:11px;background:linear-gradient(135deg,#4a2248,#2e1238);border:1px solid var(--accent);border-radius:3px;color:var(--accent);font-family:'Rajdhani';font-size:15px;font-weight:700;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:all .2s;margin-top:6px}
+.run-btn:hover{background:linear-gradient(135deg,#5e2c58,#3a1845)}
+.run-btn:disabled{opacity:.4;cursor:not-allowed}
+.btn-sm{padding:7px 14px;background:var(--bg3);border:1px solid var(--border2);border-radius:3px;color:var(--text2);font-family:'Share Tech Mono';font-size:11px;letter-spacing:1px;cursor:pointer;transition:all .2s}
+.btn-sm:hover{border-color:var(--accent);color:var(--accent)}
+.btn-sm.primary{border-color:var(--accent);color:var(--accent);background:rgba(255,140,200,.08)}
+.btn-sm.primary:hover{background:rgba(255,140,200,.15)}
+.btn-sm.danger{border-color:var(--red);color:var(--red);background:rgba(255,68,68,.05)}
+.ptable{width:100%;border-collapse:collapse;font-size:12px}
+.ptable th{font-family:'Share Tech Mono';font-size:9px;letter-spacing:1.5px;color:var(--text3);text-transform:uppercase;text-align:left;padding:5px 8px;border-bottom:1px solid var(--border)}
+.ptable td{padding:5px 8px;border-bottom:1px solid var(--border)}
+.ptable tr:last-child td{border-bottom:none}
+.iname{color:var(--text);font-weight:600}
+.iname.legendary{color:var(--gold)}
+.iname.rare{color:var(--purple)}
+.iname.uncommon{color:var(--accent3)}
+.mtag{font-family:'Share Tech Mono';font-size:9px;padding:1px 4px;border-radius:2px;letter-spacing:1px}
+.mtag.bz{background:rgba(255,140,200,.12);color:var(--accent);border:1px solid rgba(255,140,200,.25)}
+.mtag.ah{background:rgba(255,215,0,.1);color:var(--gold);border:1px solid rgba(255,215,0,.2)}
+.sgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.scard{background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:12px;position:relative;overflow:hidden}
+.scard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.scard.pos::before{background:linear-gradient(90deg,var(--accent3),transparent)}
+.scard.neg::before{background:linear-gradient(90deg,var(--red),transparent)}
+.scard.neu::before{background:linear-gradient(90deg,var(--accent),transparent)}
+.scard.gld::before{background:linear-gradient(90deg,var(--gold),transparent)}
+.slabel{font-family:'Share Tech Mono';font-size:9px;letter-spacing:1.5px;color:var(--text3);text-transform:uppercase;margin-bottom:6px}
+.sval{font-size:20px;font-weight:700;line-height:1}
+.sval.pos{color:var(--accent3)} .sval.neg{color:var(--red)} .sval.neu{color:var(--accent)} .sval.gld{color:var(--gold)}
+.ssub{font-family:'Share Tech Mono';font-size:10px;color:var(--text3);margin-top:3px}
+.progwrap{background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:10px 14px;margin-bottom:12px;display:none}
+.progwrap.vis{display:block}
+.progtrack{background:var(--bg);border-radius:2px;height:3px;overflow:hidden;margin-top:6px}
+.progfill{height:100%;background:linear-gradient(90deg,var(--accent),var(--purple));width:0%;transition:width .1s}
+.manual-price-panel{margin-top:8px}
+.manual-price-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border)}
+.manual-price-row:last-child{border-bottom:none}
+.manual-price-row .iname{flex:1;font-size:12px}
+.manual-price-row input[type=number]{width:140px;flex:none}
+.manual-price-notice{background:rgba(255,68,68,.08);border:1px solid rgba(255,68,68,.2);border-radius:3px;padding:10px 14px;margin-bottom:10px;font-family:'Share Tech Mono';font-size:11px;color:var(--red);letter-spacing:.5px}
+.manual-price-notice .notice-title{font-weight:700;margin-bottom:4px;font-size:12px}
+.checkbox-row{display:flex;align-items:center;gap:8px;padding:7px 0}
+.checkbox-row input[type=checkbox]{position:absolute;opacity:0;pointer-events:none}
+.checkbox-row label{font-size:13px;color:var(--text2);cursor:pointer}
+.checkbox-control{display:inline-flex;align-items:center;gap:8px;cursor:pointer;user-select:none}
+.checkbox-box{width:16px;height:16px;border:1px solid var(--border2);border-radius:3px;background:var(--bg3);display:inline-flex;align-items:center;justify-content:center;transition:border-color .2s, background .2s, box-shadow .2s}
+.checkbox-box::after{content:'';width:8px;height:8px;border-radius:1px;background:linear-gradient(135deg,var(--accent),var(--purple));transform:scale(0);transition:transform .16s ease}
+.checkbox-control:hover .checkbox-box{border-color:var(--accent)}
+.checkbox-row input[type=checkbox]:checked + .checkbox-box{border-color:var(--accent);box-shadow:0 0 8px rgba(255,140,200,.18)}
+.checkbox-row input[type=checkbox]:checked + .checkbox-box::after{transform:scale(1)}
+.checkbox-row input[type=checkbox]:focus-visible + .checkbox-box{outline:1px solid var(--accent);outline-offset:2px}
+.plabel{font-family:'Share Tech Mono';font-size:10px;color:var(--text3);display:flex;justify-content:space-between}
+.dtable{width:100%;border-collapse:collapse;font-size:12px}
+.dtable th{font-family:'Share Tech Mono';font-size:9px;letter-spacing:1.5px;color:var(--text3);text-transform:uppercase;text-align:left;padding:5px 8px;border-bottom:1px solid var(--border);background:var(--bg3)}
+.dtable td{padding:5px 8px;border-bottom:1px solid var(--border)}
+.dtable tr:last-child td{border-bottom:none}
+.bar-track{background:var(--bg3);border-radius:2px;height:5px;overflow:hidden;width:100px}
+.bar-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--accent),var(--purple))}
+.sim-auto-kismet-controls{margin-top:8px;padding:8px 0;border-top:1px solid var(--border)}
+.mgrid{display:grid;grid-template-columns:300px 1fr;gap:16px}
+.placeholder{text-align:center;padding:50px 20px;font-family:'Share Tech Mono';font-size:12px;color:var(--text3);letter-spacing:1px}
+.placeholder .big{font-size:40px;margin-bottom:12px;opacity:.3}
+.sim-layout{display:grid;grid-template-columns:1fr 340px;gap:16px;align-items:start}
+.chest-ui{background:var(--bg2);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.chest-header{background:#1a0a00;border-bottom:1px solid #3a2000;padding:10px 16px;display:flex;align-items:center;justify-content:space-between}
+.chest-title{font-family:'Share Tech Mono';font-size:11px;letter-spacing:2px;color:#ffaa00;text-transform:uppercase}
+.chest-cost{font-family:'Share Tech Mono';font-size:12px;color:var(--gold)}
+.chest-items{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:16px;min-height:180px}
+.chest-slot{background:#0d1117;border:1px solid #2a3540;border-radius:3px;aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;transition:all .3s;overflow:hidden}
+.chest-slot.filled{border-color:#3a4a5a}
+.chest-slot.legendary{border-color:#ffaa00;box-shadow:0 0 10px rgba(255,170,0,.2)}
+.chest-slot.rare{border-color:#8844ff;box-shadow:0 0 8px rgba(136,68,255,.15)}
+.chest-slot.uncommon{border-color:#44aa44;box-shadow:0 0 6px rgba(68,170,68,.1)}
+.chest-slot .item-icon{font-size:28px;line-height:1}
+.chest-slot .item-label{font-size:8px;font-family:'Share Tech Mono';color:var(--text3);text-align:center;padding:0 3px;margin-top:2px;line-height:1.2;word-break:break-word}
+.chest-slot.legendary .item-label{color:#ffaa00}
+.chest-slot.rare .item-label{color:#aa77ff}
+.chest-slot.uncommon .item-label{color:#44cc44}
+.chest-slot.empty{opacity:.25}
+.chest-slot .item-val{font-size:8px;font-family:'Share Tech Mono';color:var(--text3);margin-top:1px}
+.chest-actions{padding:12px 16px;border-top:1px solid var(--border);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.session-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.ss-card{background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:10px 12px}
+.ss-label{font-family:'Share Tech Mono';font-size:9px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
+.ss-val{font-size:18px;font-weight:700}
+.ss-val.pos{color:var(--accent3)} .ss-val.neg{color:var(--red)} .ss-val.neu{color:var(--accent)} .ss-val.gld{color:var(--gold)}
+.run-log{background:var(--bg3);border:1px solid var(--border);border-radius:3px;max-height:320px;overflow-y:auto}
+.log-entry{display:flex;justify-content:space-between;align-items:center;padding:6px 10px;border-bottom:1px solid var(--border);font-family:'Share Tech Mono';font-size:10px}
+.log-entry:last-child{border-bottom:none}
+.log-run{color:var(--text3)}
+.log-action{color:var(--text2)}
+.log-profit.pos{color:var(--accent3)} .log-profit.neg{color:var(--red)} .log-profit.neu{color:var(--accent)}
+.chest-empty-msg{display:flex;align-items:center;justify-content:center;height:180px;font-family:'Share Tech Mono';font-size:12px;color:var(--text3);letter-spacing:1px;flex-direction:column;gap:8px}
+.chest-empty-msg .big{font-size:36px;opacity:.3}
+@keyframes popin{0%{transform:scale(0);opacity:0}60%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
+.chest-slot.animate{animation:popin .3s ease forwards}
+@media(max-width:900px){.mgrid{grid-template-columns:1fr}.sgrid{grid-template-columns:repeat(2,1fr)}.sim-layout{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div>
+    <h1>Dungeon Profit Calculator</h1>
+    <div class="sub">PROFIT CALCULATOR // HYPIXEL SKYBLOCK DUNGEONS</div>
+  </div>
+  <div class="status-bar">
+    <div class="sdot" id="apiDot"></div>
+    <span id="apiStatus" style="color:var(--text3)">LOADING PRICES...</span>
+    <button class="btn-sm" onclick="fetchPrices()" style="margin-left:4px">REFRESH</button>
+  </div>
+</header>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('calc')">Profit Calculator</div>
+  <div class="tab" onclick="switchTab('sim')">Chest Simulator</div>
+</div>
+
+<div class="tab-content active" id="tab-calc">
+  <div class="mgrid">
+    <div>
+      <div class="panel">
+        <div class="ph"><div class="dot"></div>SIMULATION SETTINGS</div>
+        <div class="pb">
+          <div class="ctrl">
+            <label class="clabel">Floor</label>
+            <select id="calcFloor" onchange="changeCalcFloor()">
+              <option value="f7">Floor 7</option>
+              <option value="m7" selected>Master Mode 7</option>
+              <option value="m2" disabled>M2 (coming soon)</option>
+              <option value="m4">Master Mode 4</option>
+              <option value="m5" disabled>M5 (coming soon)</option>
+              <option value="m6" disabled>M6 (coming soon)</option>
+            </select>
+          </div>
+          <div class="ctrl">
+            <label class="clabel">Number of Runs</label>
+            <input type="number" id="numRuns" value="100000" min="1000" max="1000000" step="1000">
+          </div>
+          <div id="floorNotice" style="font-family:'Share Tech Mono';font-size:10px;color:var(--text3);margin-top:-6px">F7 simulation with max boss luck assumptions.</div>
+          <div class="ctrl" id="m7ScoreMixControls" style="display:none;margin-top:10px">
+            <div class="slider-head">
+              <label class="clabel" for="m7SRate" style="margin-bottom:0">% of Runs That Were S</label>
+              <span class="slider-value" id="m7SRateValue">0%</span>
+            </div>
+            <input type="range" id="m7SRate" value="0" min="0" max="100" step="1" oninput="updateM7SRate()" onchange="updateM7SRate()">
+            <div style="font-family:'Share Tech Mono';font-size:10px;color:var(--text3);margin-top:4px">Remaining runs are treated as S+.</div>
+          </div>
+          <hr class="divider">
+          <div class="checkbox-row" style="padding:0 0 8px">
+            <label class="checkbox-control" for="paulToggleCheck">
+              <input type="checkbox" id="paulToggleCheck" onchange="togglePaul()">
+              <span class="checkbox-box" aria-hidden="true"></span>
+              <span>Toggle Paul</span>
+            </label>
+          </div>
+          <div class="trow">
+            <span class="tlabel">Use Kismet Feather</span>
+            <div class="toggle on" id="kismetToggle" onclick="toggleKismet()"></div>
+          </div>
+          <div id="kismetControls">
+            <div class="ctrl" style="margin-top:10px">
+              <label class="clabel">Reroll Threshold (coins)</label>
+              <input type="number" id="kismetThreshold" value="750000" min="0" step="100000">
+            </div>
+            <div style="font-family:'Share Tech Mono';font-size:10px;color:var(--text3);margin-top:-6px">Reroll if profit &lt; threshold (-1.1M for feather)</div>
+          </div>
+          <hr class="divider">
+          <button class="run-btn" id="runBtn" onclick="runSimulation()">RUN SIMULATION</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="ph"><div class="dot"></div>LIVE MARKET PRICES</div>
+        <div class="pb" style="padding:6px">
+          <div class="checkbox-row" style="padding:0 8px 8px">
+            <label class="checkbox-control" for="hideNoValueItemsCheck">
+              <input type="checkbox" id="hideNoValueItemsCheck" checked onchange="toggleHideNoValueItems()">
+              <span class="checkbox-box" aria-hidden="true"></span>
+              <span>Hide no value items</span>
+            </label>
+          </div>
+          <div class="checkbox-row" style="padding:0 8px 8px">
+            <label class="checkbox-control" for="hideNegativeProfitItemsCheck">
+              <input type="checkbox" id="hideNegativeProfitItemsCheck" checked onchange="toggleHideNegativeProfitItems()">
+              <span class="checkbox-box" aria-hidden="true"></span>
+              <span>Hide negative profit items</span>
+            </label>
+          </div>
+          <table class="ptable">
+            <thead><tr><th>Item</th><th>Mkt</th><th>After Tax</th></tr></thead>
+            <tbody id="priceTableBody"><tr><td colspan="3" style="padding:14px;text-align:center;font-family:'Share Tech Mono';font-size:11px;color:var(--text3)">Fetching prices...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="progwrap" id="progressWrap">
+        <div class="plabel"><span>SIMULATING RUNS...</span><span id="progressPct">0%</span></div>
+        <div class="progtrack"><div class="progfill" id="progressFill"></div></div>
+      </div>
+      <div id="resultsArea">
+        <div class="panel"><div class="pb"><div class="placeholder"><div class="big">SIM</div>Configure settings and run the simulation to see results.</div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="tab-content" id="tab-sim">
+  <div class="sim-layout">
+    <div>
+      <div class="chest-ui">
+        <div class="chest-header">
+          <span class="chest-title" id="simChestTitle">BEDROCK CHEST - F7</span>
+          <span class="chest-cost" id="simChestCost"></span>
+        </div>
+        <div id="chestDisplay">
+          <div class="chest-empty-msg">
+            <div class="big">D</div>
+            <span>Roll a chest to see what drops!</span>
+          </div>
+        </div>
+        <div class="chest-actions" id="chestActions" style="display:none">
+          <button class="btn-sm primary" id="openBtn" onclick="openChest()">OPEN CHEST</button>
+          <button class="btn-sm" id="kismetBtn" onclick="useKismet()" style="display:none">KISMET FEATHER (-1.1M)</button>
+          <button class="btn-sm danger" onclick="skipChest()">SKIP (FREE CHEST +100k)</button>
+          <span id="rerollLabel" style="font-family:'Share Tech Mono';font-size:10px;color:var(--text3);margin-left:auto"></span>
+        </div>
+      </div>
+
+      <div class="panel" id="chestBreakdown" style="display:none">
+        <div class="ph"><div class="dot"></div>CHEST CONTENTS VALUE</div>
+        <div class="pb" style="padding:6px">
+          <table class="ptable" id="chestBreakTable"></table>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="panel">
+        <div class="ph"><div class="dot"></div>SESSION CONTROLS</div>
+        <div class="pb">
+          <div class="ctrl">
+            <label class="clabel">Simulator Floor</label>
+            <select id="simFloor" onchange="changeSimFloor()">
+              <option value="f7" selected>Floor 7</option>
+              <option value="m4">Master Mode 4</option>
+              <option value="m7">Master Mode 7</option>
+            </select>
+          </div>
+          <div style="display:flex;gap:8px;margin-bottom:10px">
+            <button class="btn-sm primary" style="flex:1" onclick="rollNewChest()">ROLL CHEST</button>
+            <button class="btn-sm danger" onclick="resetSession()">RESET</button>
+          </div>
+          <div class="trow">
+            <span class="tlabel">Kismet Feather available</span>
+            <div class="toggle on" id="simKismetToggle" onclick="toggleSimKismet()"></div>
+          </div>
+          <div style="font-family:'Share Tech Mono';font-size:10px;color:var(--text3);margin-top:6px">Each run you can reroll once for -1.1M</div>
+          <div class="sim-auto-kismet-controls">
+            <div class="checkbox-row">
+              <label class="checkbox-control" for="simAutoKismetCheck">
+                <input type="checkbox" id="simAutoKismetCheck" onchange="toggleSimAutoKismet()">
+                <span class="checkbox-box" aria-hidden="true"></span>
+                <span>Auto-use Kismet if profit below threshold</span>
+              </label>
+            </div>
+            <div id="simAutoKismetSettings" style="display:none">
+              <div class="ctrl" style="margin-top:8px">
+                <label class="clabel">Auto-Kismet Threshold (coins)</label>
+                <input type="number" id="simAutoKismetThreshold" value="0" min="0" step="100000" onchange="updateSimAutoKismetThreshold()">
+              </div>
+              <div style="font-family:'Share Tech Mono';font-size:10px;color:var(--text3);margin-top:-6px">Auto-reroll if chest profit &lt; this value</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="ph"><div class="dot"></div>SESSION STATS</div>
+        <div class="pb" style="padding:8px">
+          <div class="session-stats">
+            <div class="ss-card"><div class="ss-label">Total P/L</div><div class="ss-val neu" id="ss-total">0</div></div>
+            <div class="ss-card"><div class="ss-label">Runs</div><div class="ss-val neu" id="ss-runs">0</div></div>
+            <div class="ss-card"><div class="ss-label">Avg / Run</div><div class="ss-val neu" id="ss-avg">-</div></div>
+            <div class="ss-card"><div class="ss-label">Best Run</div><div class="ss-val gld" id="ss-best">-</div></div>
+          </div>
+          <div style="font-family:'Share Tech Mono';font-size:9px;color:var(--text3);margin-bottom:6px;letter-spacing:1px">RUN LOG</div>
+          <div class="run-log" id="runLog">
+            <div style="padding:20px;text-align:center;font-family:'Share Tech Mono';font-size:11px;color:var(--text3)">No runs yet</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<script>
+const LOOT = [
+  {weight:15, quality:360, id:'NECRONS_HANDLE', name:"Necron's Handle", market:'ah', rarity:'legendary', icon:'ðŸ’€', coinsToOpen:100000000},
+  {weight:20, quality:350, id:'IMPLOSION_SCROLL', name:'Implosion Scroll', market:'bz', rarity:'rare', icon:'ðŸ“œ', coinsToOpen:50000000},
+  {weight:20, quality:350, id:'SHADOW_WARP_SCROLL', name:'Shadow Warp Scroll', market:'bz', rarity:'rare', icon:'ðŸ“œ', coinsToOpen:50000000},
+  {weight:20, quality:350, id:'WITHER_SHIELD_SCROLL', name:'Wither Shield Scroll', market:'bz', rarity:'rare', icon:'ðŸ“œ', coinsToOpen:50000000},
+  {weight:80, quality:330, id:'AUTO_RECOMBOBULATOR', name:'Auto Recombobulator', market:'ah', rarity:'rare', icon:'âš™ï¸', coinsToOpen:10000000},
+  {weight:80, quality:310, id:'WITHER_CHESTPLATE', name:'Wither Chestplate', market:'ah', rarity:'rare', icon:'ðŸ§¥', coinsToOpen:10000000},
+  {weight:80, quality:290, id:'ONE_FOR_ALL_BOOK', name:'One For All Book', market:'bz', rarity:'rare', icon:'ðŸ“—', coinsToOpen:2000000},
+  {weight:400, quality:250, id:'RECOMBOBULATOR_3000', name:'Recombobulator 3000', market:'bz', rarity:'uncommon', icon:'ðŸ”®', coinsToOpen:6000000},
+  {weight:320, quality:250, id:'WITHER_LEGGINGS', name:'Wither Leggings', market:'ah', rarity:'rare', icon:'ðŸ‘–', coinsToOpen:6000000},
+  {weight:480, quality:230, id:'WITHER_CLOAK_SWORD', name:'Wither Cloak Sword', market:'ah', rarity:'rare', icon:'âš”ï¸', coinsToOpen:4500000},
+  {weight:480, quality:210, id:'WITHER_BLOOD', name:'Wither Blood', market:'bz', rarity:'rare', icon:'ðŸ©¸', coinsToOpen:3000000},
+  {weight:480, quality:210, id:'WITHER_HELMET', name:'Wither Helmet', market:'ah', rarity:'rare', icon:'â›‘ï¸', coinsToOpen:4000000},
+  {weight:800, quality:180, id:'SOUL_EATER_BOOK', name:'Soul Eater Book', market:'bz', rarity:'uncommon', icon:'ðŸ“•', coinsToOpen:2000000},
+  {weight:400, quality:175, id:'FUMING_POTATO_BOOK', name:'Fuming Potato Book', market:'bz', rarity:'uncommon', icon:'ðŸ¥”', coinsToOpen:2000000},
+  {weight:480, quality:170, id:'WITHER_BOOTS', name:'Wither Boots', market:'ah', rarity:'rare', icon:'ðŸ‘¢', coinsToOpen:2500000},
+  {weight:800, quality:160, id:'HOT_POTATO_BOOK', name:'Hot Potato Book', market:'bz', rarity:'uncommon', icon:'ðŸ¥”', coinsToOpen:2000000},
+  {weight:400, quality:160, id:'WITHER_CATALYST', name:'Wither Catalyst', market:'bz', rarity:'uncommon', icon:'âš—ï¸', coinsToOpen:2000000},
+  {weight:1200, quality:140, id:'PRECURSOR_GEAR', name:'Precursor Gear', market:'bz', rarity:'uncommon', icon:'âš™ï¸', coinsToOpen:2000000},
+  {weight:1000, quality:120, id:'COMBO_BOOK', name:'Combo II Book', market:'bz', rarity:'uncommon', icon:'ðŸ“˜', coinsToOpen:2000000},
+  {weight:400, quality:120, id:'NO_PAIN_NO_GAIN_BOOK', name:'No Pain No Gain II', market:'bz', rarity:'uncommon', icon:'ðŸ“˜', coinsToOpen:2000000},
+  {weight:1000, quality:100, id:'LAST_STAND_BOOK', name:'Last Stand II Book', market:'bz', rarity:'uncommon', icon:'ðŸ“˜', coinsToOpen:2000000},
+  {weight:1000, quality:100, id:'REJUVENATE_BOOK', name:'Rejuvenate III Book', market:'bz', rarity:'uncommon', icon:'ðŸ“˜', coinsToOpen:2000000},
+  {weight:800, quality:100, id:'ULTIMATE_WISE_BOOK', name:'Ultimate Wise II Book', market:'bz', rarity:'uncommon', icon:'ðŸ“™', coinsToOpen:2000000},
+  {weight:600, quality:100, id:'ULTIMATE_JERRY_BOOK', name:'Ultimate Jerry III Book', market:'bz', rarity:'uncommon', icon:'ðŸ“™', coinsToOpen:2000000},
+  {weight:500, quality:100, id:'BANK_BOOK', name:'Bank III Book', market:'bz', rarity:'uncommon', icon:'ðŸ“˜', coinsToOpen:2000000},
+  {weight:500, quality:100, id:'WISDOM_BOOK', name:'Wisdom II Book', market:'bz', rarity:'uncommon', icon:'ðŸ“˜', coinsToOpen:2000000},
+  {weight:1000, quality:80, id:'INFINITE_QUIVER_BOOK', name:'Inf. Quiver VII Book', market:'bz', rarity:'uncommon', icon:'ðŸ“˜', coinsToOpen:2000000},
+  {weight:320, quality:80, id:'FEATHER_FALLING_BOOK', name:'Feather Fall VII Book', market:'bz', rarity:'uncommon', icon:'ðŸ“˜', coinsToOpen:2000000},
+  {weight:10, quality:61, id:'GOLDOR_THE_FISH', name:'Goldor The Fish', market:'ignore', rarity:'rare', icon:'ðŸŸ', coinsToOpen:2000000},
+  {weight:10, quality:61, id:'MAXOR_THE_FISH', name:'Maxor The Fish', market:'ignore', rarity:'rare', icon:'ðŸŸ', coinsToOpen:2000000},
+  {weight:10, quality:61, id:'STORM_THE_FISH', name:'Storm The Fish', market:'ignore', rarity:'rare', icon:'ðŸŸ', coinsToOpen:2000000},
+  {weight:1400, quality:40, id:'WITHER_ESSENCE', name:'Wither Essence (5)', market:'bz', rarity:'uncommon', icon:'âœ¨', coinsToOpen:0, qty:5, bonusDrop:true},
+  {weight:1200, quality:40, id:'UNDEAD_ESSENCE', name:'Undead Essence (20)', market:'bz', rarity:'uncommon', icon:'âœ¨', coinsToOpen:0, qty:20, bonusDrop:true},
+];
+
+const M7_BEDROCK_LOOT = [
+  {weight:25, quality:380, id:'IMPLOSION_SCROLL', name:'Implosion', market:'bz', rarity:'rare', icon:'ðŸ“œ', coinsToOpen:50000000},
+  {weight:25, quality:380, id:'SHADOW_WARP_SCROLL', name:'Shadow Warp', market:'bz', rarity:'rare', icon:'ðŸ“œ', coinsToOpen:50000000},
+  {weight:25, quality:380, id:'WITHER_SHIELD_SCROLL', name:'Wither Shield', market:'bz', rarity:'rare', icon:'ðŸ“œ', coinsToOpen:50000000},
+  {weight:18, quality:380, id:'NECRONS_HANDLE', name:"Necron's Handle", market:'ah', rarity:'legendary', icon:'ðŸ’€', coinsToOpen:100000000},
+  {weight:10, quality:360, id:'DARK_CLAYMORE', name:'Dark Claymore', market:'ah', rarity:'legendary', icon:'ðŸ—¡ï¸', coinsToOpen:150000000},
+  {weight:80, quality:330, id:'AUTO_RECOMBOBULATOR', name:'Auto Recombobulator', market:'ah', rarity:'rare', icon:'âš™ï¸', coinsToOpen:10000000},
+  {weight:30, quality:320, id:'FIFTH_MASTER_STAR', name:'Fifth Master Star', market:'bz', rarity:'rare', icon:'â­', coinsToOpen:9000000},
+  {weight:80, quality:310, id:'WITHER_CHESTPLATE', name:'Wither Chestplate', market:'ah', rarity:'rare', icon:'ðŸ§¥', coinsToOpen:10000000},
+  {weight:80, quality:290, id:'ONE_FOR_ALL_BOOK', name:'One For All Book', market:'bz', rarity:'rare', icon:'ðŸ“—', coinsToOpen:2000000},
+  {weight:500, quality:250, id:'RECOMBOBULATOR_3000', name:'Recombobulator 3000', market:'bz', rarity:'uncommon', icon:'ðŸ”®', coinsToOpen:6000000},
+  {weight:320, quality:250, id:'WITHER_LEGGINGS', name:'Wither Leggings', market:'ah', rarity:'rare', icon:'ðŸ‘–', coinsToOpen:6000000},
+  {weight:24, quality:250, id:'MASTER_SKULL_TIER_5', name:'Master Skull - Tier 5', market:'ah', rarity:'rare', icon:'ðŸ’€', coinsToOpen:32000000},
+  {weight:480, quality:230, id:'WITHER_CLOAK_SWORD', name:'Wither Cloak Sword', market:'ah', rarity:'rare', icon:'âš”ï¸', coinsToOpen:4500000},
+  {weight:480, quality:210, id:'WITHER_BLOOD', name:'Wither Blood', market:'bz', rarity:'rare', icon:'ðŸ©¸', coinsToOpen:3000000},
+  {weight:480, quality:210, id:'WITHER_HELMET', name:'Wither Helmet', market:'ah', rarity:'rare', icon:'â›‘ï¸', coinsToOpen:4000000},
+  {weight:20, quality:200, id:'THUNDERLORD_VII_BOOK', name:'Thunderlord VII Book', market:'bz', rarity:'rare', icon:'ðŸ“˜', coinsToOpen:2000000},
+  {weight:800, quality:180, id:'SOUL_EATER_4_BOOK', name:'Soul Eater IV Book', market:'bz', rarity:'uncommon', icon:'ðŸ“•', coinsToOpen:2000000},
+  {weight:400, quality:175, id:'FUMING_POTATO_BOOK', name:'Fuming Potato Book', market:'bz', rarity:'uncommon', icon:'ðŸ¥”', coinsToOpen:2000000},
+  {weight:480, quality:170, id:'WITHER_BOOTS', name:'Wither Boots', market:'ah', rarity:'rare', icon:'ðŸ‘¢', coinsToOpen:2500000},
+  {weight:800, quality:160, id:'HOT_POTATO_BOOK', name:'Hot Potato Book', market:'bz', rarity:'uncommon', icon:'ðŸ¥”', coinsToOpen:2000000},
+  {weight:400, quality:160, id:'WITHER_CATALYST', name:'Wither Catalyst', market:'bz', rarity:'uncommon', icon:'âš—ï¸', coinsToOpen:2000000},
+  {weight:1200, quality:140, id:'PRECURSOR_GEAR', name:'Precursor Gear', market:'bz', rarity:'uncommon', icon:'âš™ï¸', coinsToOpen:2000000},
+  {weight:1000, quality:120, id:'COMBO_2_BOOK', name:'Combo II Book', market:'bz', rarity:'uncommon', icon:'ðŸ“˜', coinsToOpen:2000000},
+  {weight:400, quality:120, id:'NO_PAIN_NO_GAIN_2_BOOK', name:'No Pain No Gain II', market:'bz', rarity:'uncommon', icon:'ðŸ“˜', coinsToOpen:2000000},
+  {weight:1000, quality:100, id:'LAST_STAND_1_BOOK', name:'Last Stand I Book', market:'bz', rarity:'uncommon', icon:'ðŸ“˜', coinsToOpen:2000000},
+  {weight:1000, quality:100, id:'REJUVENATE_3_BOOK', name:'Rejuvenate III Book', market:'bz', rarity:'uncommon', icon:'ðŸ“˜', coinsToOpen:2000000},
+  {weight:800, quality:100, id:'ULTIMATE_WISE_2_BOOK', name:'Ultimate Wise II Book', market:'bz', rarity:'uncommon', icon:'ðŸ“™', coinsToOpen:2000000},
+  {weight:600, quality:100, id:'ULTIMATE_JERRY_3_BOOK', name:'Ultimate Jerry III Book', market:'bz', rarity:'uncommon', icon:'ðŸ“™', coinsToOpen:2000000},
+  {weight:500, quality:100, id:'BANK_2_BOOK', name:'Bank II Book', market:'bz', rarity:'uncommon', icon:'ðŸ“˜', coinsToOpen:2000000},
+  {weight:500, quality:100, id:'WISDOM_2_BOOK', name:'Wisdom II Book', market:'bz', rarity:'uncommon', icon:'ðŸ“˜', coinsToOpen:2000000},
+  {weight:1000, quality:80, id:'INFINITE_QUIVER_7_BOOK', name:'Infinite Quiver VII Book', market:'bz', rarity:'uncommon', icon:'ðŸ“˜', coinsToOpen:2000000},
+  {weight:320, quality:80, id:'FEATHER_FALLING_7_BOOK', name:'Feather Falling VII Book', market:'bz', rarity:'uncommon', icon:'ðŸ“˜', coinsToOpen:2000000},
+  {weight:5, quality:61, id:'GOLDOR_THE_FISH', name:'Goldor The Fish', market:'ignore', rarity:'rare', icon:'ðŸŸ', coinsToOpen:2000000},
+  {weight:5, quality:61, id:'MAXOR_THE_FISH', name:'Maxor The Fish', market:'ignore', rarity:'rare', icon:'ðŸŸ', coinsToOpen:2000000},
+  {weight:5, quality:61, id:'STORM_THE_FISH', name:'Storm The Fish', market:'ignore', rarity:'rare', icon:'ðŸŸ', coinsToOpen:2000000},
+  {weight:1, quality:10, id:'WITHER_ESSENCE', name:'Wither Essence (1)', market:'bz', rarity:'uncommon', icon:'âœ¨', coinsToOpen:0, qty:1, bonusDrop:true},
+  {weight:0, quality:1, id:'UNDEAD_ESSENCE_SINGLE', name:'Undead Essence (1)', market:'bz', rarity:'uncommon', icon:'âœ¨', coinsToOpen:0, qty:1, bonusDrop:true, priceId:'UNDEAD_ESSENCE'},
+];
+
+const M7_OBSIDIAN_LOOT = [
+  {weight:1, quality:320, id:'FIFTH_MASTER_STAR', name:'Fifth Master Star', market:'bz', rarity:'rare', icon:'â­', coinsToOpen:9000000},
+  {weight:1, quality:310, id:'WITHER_CHESTPLATE', name:'Wither Chestplate', market:'ah', rarity:'rare', icon:'ðŸ§¥', coinsToOpen:10000000},
+  {weight:1, quality:290, id:'ONE_FOR_ALL_BOOK', name:'One For All Book', market:'bz', rarity:'rare', icon:'ðŸ“—', coinsToOpen:2000000},
+  {weight:4, quality:250, id:'MASTER_SKULL_TIER_4', name:'Master Skull - Tier 4', market:'ah', rarity:'rare', icon:'ðŸ’€', coinsToOpen:8000000},
+  {weight:4, quality:250, id:'WITHER_LEGGINGS', name:'Wither Leggings', market:'ah', rarity:'rare', icon:'ðŸ‘–', coinsToOpen:6000000},
+  {weight:2, quality:250, id:'RECOMBOBULATOR_3000', name:'Recombobulator 3000', market:'bz', rarity:'uncommon', icon:'ðŸ”®', coinsToOpen:6000000},
+  {weight:6, quality:230, id:'WITHER_CLOAK_SWORD', name:'Wither Cloak Sword', market:'ah', rarity:'rare', icon:'âš”ï¸', coinsToOpen:4500000},
+  {weight:6, quality:210, id:'WITHER_BLOOD', name:'Wither Blood', market:'bz', rarity:'rare', icon:'ðŸ©¸', coinsToOpen:2500000},
+  {weight:6, quality:210, id:'WITHER_HELMET', name:'Wither Helmet', market:'ah', rarity:'rare', icon:'â›‘ï¸', coinsToOpen:4000000},
+  {weight:14, quality:180, id:'SOUL_EATER_1_BOOK', name:'Soul Eater I Book', market:'bz', rarity:'uncommon', icon:'ðŸ“•', coinsToOpen:1000000},
+  {weight:14, quality:175, id:'FUMING_POTATO_BOOK', name:'Fuming Potato Book', market:'bz', rarity:'uncommon', icon:'ðŸ¥”', coinsToOpen:1000000},
+  {weight:14, quality:170, id:'WITHER_BOOTS', name:'Wither Boots', market:'ah', rarity:'rare', icon:'ðŸ‘¢', coinsToOpen:2500000},
+  {weight:14, quality:160, id:'WITHER_CATALYST', name:'Wither Catalyst', market:'bz', rarity:'uncommon', icon:'âš—ï¸', coinsToOpen:1000000},
+  {weight:10, quality:160, id:'HOT_POTATO_BOOK', name:'Hot Potato Book', market:'bz', rarity:'uncommon', icon:'ðŸ¥”', coinsToOpen:1000000},
+  {weight:16, quality:140, id:'PRECURSOR_GEAR', name:'Precursor Gear', market:'bz', rarity:'uncommon', icon:'âš™ï¸', coinsToOpen:1000000},
+  {weight:32, quality:120, id:'COMBO_1_BOOK', name:'Combo I Book', market:'bz', rarity:'uncommon', icon:'ðŸ“˜', coinsToOpen:1000000},
+  {weight:10, quality:120, id:'NO_PAIN_NO_GAIN_1_BOOK', name:'No Pain No Gain I', market:'bz', rarity:'uncommon', icon:'ðŸ“˜', coinsToOpen:1000000},
+  {weight:50, quality:100, id:'REJUVENATE_1_BOOK', name:'Rejuvenate I Book', market:'bz', rarity:'uncommon', icon:'ðŸ“˜', coinsToOpen:1000000},
+  {weight:40, quality:100, id:'ULTIMATE_WISE_1_BOOK', name:'Ultimate Wise I Book', market:'bz', rarity:'uncommon', icon:'ðŸ“™', coinsToOpen:1000000},
+  {weight:30, quality:100, id:'LAST_STAND_1_BOOK', name:'Last Stand I Book', market:'bz', rarity:'uncommon', icon:'ðŸ“˜', coinsToOpen:1000000},
+  {weight:15, quality:100, id:'ULTIMATE_BANK_2_BOOK', name:'Ultimate Bank II Book', market:'bz', rarity:'uncommon', icon:'ðŸ“™', coinsToOpen:1000000},
+  {weight:15, quality:100, id:'WISDOM_1_BOOK', name:'Wisdom I Book', market:'bz', rarity:'uncommon', icon:'ðŸ“˜', coinsToOpen:1000000},
+  {weight:8, quality:100, id:'ULTIMATE_JERRY_2_BOOK', name:'Ultimate Jerry II Book', market:'bz', rarity:'uncommon', icon:'ðŸ“™', coinsToOpen:1000000},
+  {weight:1, quality:10, id:'WITHER_ESSENCE', name:'Wither Essence (1)', market:'bz', rarity:'uncommon', icon:'âœ¨', coinsToOpen:0, qty:1, bonusDrop:true},
+  {weight:0, quality:1, id:'UNDEAD_ESSENCE_SINGLE', name:'Undead Essence (1)', market:'bz', rarity:'uncommon', icon:'âœ¨', coinsToOpen:0, qty:1, bonusDrop:true, priceId:'UNDEAD_ESSENCE'},
+];
+
+const M7_S_BEDROCK_LOOT = [
+  {weight:25, quality:380, id:'IMPLOSION_SCROLL', name:'Implosion', market:'bz', rarity:'rare', icon:'IS', coinsToOpen:50000000},
+  {weight:25, quality:380, id:'SHADOW_WARP_SCROLL', name:'Shadow Warp', market:'bz', rarity:'rare', icon:'SW', coinsToOpen:50000000},
+  {weight:25, quality:380, id:'WITHER_SHIELD_SCROLL', name:'Wither Shield', market:'bz', rarity:'rare', icon:'WS', coinsToOpen:50000000},
+  {weight:18, quality:380, id:'NECRONS_HANDLE', name:"Necron's Handle", market:'ah', rarity:'legendary', icon:'NH', coinsToOpen:100000000},
+  {weight:10, quality:360, id:'DARK_CLAYMORE', name:'Dark Claymore', market:'ah', rarity:'legendary', icon:'DC', coinsToOpen:150000000},
+  {weight:80, quality:330, id:'AUTO_RECOMBOBULATOR', name:'Auto Recombobulator', market:'ah', rarity:'rare', icon:'AR', coinsToOpen:10000000},
+  {weight:30, quality:320, id:'FIFTH_MASTER_STAR', name:'Fifth Master Star', market:'bz', rarity:'rare', icon:'5S', coinsToOpen:9000000},
+  {weight:80, quality:310, id:'WITHER_CHESTPLATE', name:'Wither Chestplate', market:'ah', rarity:'rare', icon:'CP', coinsToOpen:10000000},
+  {weight:80, quality:290, id:'ONE_FOR_ALL_BOOK', name:'One For All Book', market:'bz', rarity:'rare', icon:'OA', coinsToOpen:2000000},
+  {weight:500, quality:250, id:'RECOMBOBULATOR_3000', name:'Recombobulator 3000', market:'bz', rarity:'uncommon', icon:'R3', coinsToOpen:6000000},
+  {weight:320, quality:250, id:'WITHER_LEGGINGS', name:'Wither Leggings', market:'ah', rarity:'rare', icon:'LG', coinsToOpen:6000000},
+  {weight:24, quality:250, id:'MASTER_SKULL_TIER_5', name:'Master Skull - Tier 5', market:'ah', rarity:'rare', icon:'M5', coinsToOpen:32000000},
+  {weight:480, quality:230, id:'WITHER_CLOAK_SWORD', name:'Wither Cloak Sword', market:'ah', rarity:'rare', icon:'CS', coinsToOpen:4500000},
+  {weight:480, quality:210, id:'WITHER_BLOOD', name:'Wither Blood', market:'bz', rarity:'rare', icon:'BL', coinsToOpen:3000000},
+  {weight:480, quality:210, id:'WITHER_HELMET', name:'Wither Helmet', market:'ah', rarity:'rare', icon:'HM', coinsToOpen:4000000},
+  {weight:20, quality:200, id:'THUNDERLORD_VII_BOOK', name:'Thunderlord VII Book', market:'bz', rarity:'rare', icon:'TL', coinsToOpen:2000000},
+  {weight:800, quality:180, id:'SOUL_EATER_4_BOOK', name:'Soul Eater IV Book', market:'bz', rarity:'uncommon', icon:'SE', coinsToOpen:2000000},
+  {weight:400, quality:175, id:'FUMING_POTATO_BOOK', name:'Fuming Potato Book', market:'bz', rarity:'uncommon', icon:'FP', coinsToOpen:2000000},
+  {weight:480, quality:170, id:'WITHER_BOOTS', name:'Wither Boots', market:'ah', rarity:'rare', icon:'BT', coinsToOpen:2500000},
+  {weight:800, quality:160, id:'HOT_POTATO_BOOK', name:'Hot Potato Book', market:'bz', rarity:'uncommon', icon:'HP', coinsToOpen:2000000},
+  {weight:400, quality:160, id:'WITHER_CATALYST', name:'Wither Catalyst', market:'bz', rarity:'uncommon', icon:'CT', coinsToOpen:2000000},
+  {weight:1200, quality:140, id:'PRECURSOR_GEAR', name:'Precursor Gear', market:'bz', rarity:'uncommon', icon:'PG', coinsToOpen:2000000},
+  {weight:1000, quality:120, id:'COMBO_2_BOOK', name:'Combo II Book', market:'bz', rarity:'uncommon', icon:'CB', coinsToOpen:2000000},
+  {weight:400, quality:120, id:'NO_PAIN_NO_GAIN_2_BOOK', name:'No Pain No Gain II Book', market:'bz', rarity:'uncommon', icon:'NG', coinsToOpen:2000000},
+  {weight:1000, quality:100, id:'LAST_STAND_1_BOOK', name:'Last Stand I Book', market:'bz', rarity:'uncommon', icon:'LS', coinsToOpen:2000000},
+  {weight:1000, quality:100, id:'REJUVENATE_2_BOOK', name:'Rejuvenate II Book', market:'bz', rarity:'uncommon', icon:'RJ', coinsToOpen:2000000},
+  {weight:800, quality:100, id:'ULTIMATE_WISE_2_BOOK', name:'Ultimate Wise II Book', market:'bz', rarity:'uncommon', icon:'UW', coinsToOpen:2000000},
+  {weight:600, quality:100, id:'ULTIMATE_JERRY_2_BOOK', name:'Ultimate Jerry II Book', market:'bz', rarity:'uncommon', icon:'UJ', coinsToOpen:2000000},
+  {weight:500, quality:100, id:'BANK_2_BOOK', name:'Bank II Book', market:'bz', rarity:'uncommon', icon:'BK', coinsToOpen:2000000},
+  {weight:500, quality:100, id:'WISDOM_2_BOOK', name:'Wisdom II Book', market:'bz', rarity:'uncommon', icon:'WD', coinsToOpen:2000000},
+  {weight:1000, quality:80, id:'INFINITE_QUIVER_7_BOOK', name:'Infinite Quiver VII Book', market:'bz', rarity:'uncommon', icon:'IQ', coinsToOpen:2000000},
+  {weight:320, quality:80, id:'FEATHER_FALLING_7_BOOK', name:'Feather Falling VII Book', market:'bz', rarity:'uncommon', icon:'FF', coinsToOpen:2000000},
+  {weight:5, quality:61, id:'GOLDOR_THE_FISH', name:'Goldor The Fish', market:'ignore', rarity:'rare', icon:'GF', coinsToOpen:2000000},
+  {weight:5, quality:61, id:'MAXOR_THE_FISH', name:'Maxor The Fish', market:'ignore', rarity:'rare', icon:'MF', coinsToOpen:2000000},
+  {weight:5, quality:61, id:'STORM_THE_FISH', name:'Storm The Fish', market:'ignore', rarity:'rare', icon:'SF', coinsToOpen:2000000},
+  {weight:1, quality:10, id:'WITHER_ESSENCE', name:'Wither Essence (1)', market:'bz', rarity:'uncommon', icon:'WE', coinsToOpen:0, qty:1, bonusDrop:true},
+  {weight:0, quality:1, id:'UNDEAD_ESSENCE_SINGLE', name:'Undead Essence (1)', market:'bz', rarity:'uncommon', icon:'UE', coinsToOpen:0, qty:1, bonusDrop:true, priceId:'UNDEAD_ESSENCE'},
+  {weight:0, quality:0, id:'APEX_OR_POWER_DRAGON_SHARD', name:'Apex Dragon or Power Dragon Shard', market:'ignore', rarity:'uncommon', icon:'DS', coinsToOpen:0, bonusDrop:true, guaranteed:true},
+  {weight:0, quality:0, id:'UNDEAD_ESSENCE_125', name:'Undead Essence (125)', market:'bz', rarity:'uncommon', icon:'UE', coinsToOpen:0, qty:125, bonusDrop:true, guaranteed:true, priceId:'UNDEAD_ESSENCE'},
+  {weight:0, quality:0, id:'WITHER_ESSENCE_100', name:'Wither Essence (100)', market:'bz', rarity:'uncommon', icon:'WE', coinsToOpen:0, qty:100, bonusDrop:true, guaranteed:true, priceId:'WITHER_ESSENCE'}
+];
+const M7_S_OBSIDIAN_LOOT = [
+  {weight:1, quality:320, id:'FIFTH_MASTER_STAR', name:'Fifth Master Star', market:'bz', rarity:'rare', icon:'5S', coinsToOpen:9000000},
+  {weight:1, quality:310, id:'WITHER_CHESTPLATE', name:'Wither Chestplate', market:'ah', rarity:'rare', icon:'CP', coinsToOpen:10000000},
+  {weight:1, quality:290, id:'ONE_FOR_ALL_BOOK', name:'Ultimate One For All Book', market:'bz', rarity:'rare', icon:'OA', coinsToOpen:2000000},
+  {weight:4, quality:250, id:'MASTER_SKULL_TIER_4', name:'Master Skull - Tier 4', market:'ah', rarity:'rare', icon:'M4', coinsToOpen:8000000},
+  {weight:4, quality:250, id:'WITHER_LEGGINGS', name:'Wither Leggings', market:'ah', rarity:'rare', icon:'LG', coinsToOpen:6000000},
+  {weight:2, quality:250, id:'RECOMBOBULATOR_3000', name:'Recombobulator 3000', market:'bz', rarity:'uncommon', icon:'R3', coinsToOpen:6000000},
+  {weight:6, quality:230, id:'WITHER_CLOAK_SWORD', name:'Wither Cloak Sword', market:'ah', rarity:'rare', icon:'CS', coinsToOpen:4500000},
+  {weight:6, quality:210, id:'WITHER_BLOOD', name:'Wither Blood', market:'bz', rarity:'rare', icon:'BL', coinsToOpen:2500000},
+  {weight:6, quality:210, id:'WITHER_HELMET', name:'Wither Helmet', market:'ah', rarity:'rare', icon:'HM', coinsToOpen:4000000},
+  {weight:14, quality:180, id:'SOUL_EATER_1_BOOK', name:'Soul Eater I Book', market:'bz', rarity:'uncommon', icon:'SE', coinsToOpen:1000000},
+  {weight:14, quality:175, id:'FUMING_POTATO_BOOK', name:'Fuming Potato Book', market:'bz', rarity:'uncommon', icon:'FP', coinsToOpen:1000000},
+  {weight:14, quality:170, id:'WITHER_BOOTS', name:'Wither Boots', market:'ah', rarity:'rare', icon:'BT', coinsToOpen:2500000},
+  {weight:14, quality:160, id:'WITHER_CATALYST', name:'Wither Catalyst', market:'bz', rarity:'uncommon', icon:'CT', coinsToOpen:1000000},
+  {weight:10, quality:160, id:'HOT_POTATO_BOOK', name:'Hot Potato Book', market:'bz', rarity:'uncommon', icon:'HP', coinsToOpen:1000000},
+  {weight:16, quality:140, id:'PRECURSOR_GEAR', name:'Precursor Gear', market:'bz', rarity:'uncommon', icon:'PG', coinsToOpen:1000000},
+  {weight:32, quality:120, id:'COMBO_1_BOOK', name:'Combo I Book', market:'bz', rarity:'uncommon', icon:'CB', coinsToOpen:1000000},
+  {weight:10, quality:120, id:'NO_PAIN_NO_GAIN_1_BOOK', name:'No Pain No Gain I Book', market:'bz', rarity:'uncommon', icon:'NG', coinsToOpen:1000000},
+  {weight:50, quality:100, id:'REJUVENATE_1_BOOK', name:'Rejuvenate I Book', market:'bz', rarity:'uncommon', icon:'RJ', coinsToOpen:1000000},
+  {weight:40, quality:100, id:'ULTIMATE_WISE_1_BOOK', name:'Ultimate Wise I Book', market:'bz', rarity:'uncommon', icon:'UW', coinsToOpen:1000000},
+  {weight:30, quality:100, id:'LAST_STAND_1_BOOK', name:'Last Stand I Book', market:'bz', rarity:'uncommon', icon:'LS', coinsToOpen:1000000},
+  {weight:15, quality:100, id:'ULTIMATE_BANK_2_BOOK', name:'Ultimate Bank II Book', market:'bz', rarity:'uncommon', icon:'UB', coinsToOpen:1000000},
+  {weight:15, quality:100, id:'WISDOM_1_BOOK', name:'Wisdom I Book', market:'bz', rarity:'uncommon', icon:'WD', coinsToOpen:1000000},
+  {weight:8, quality:100, id:'ULTIMATE_JERRY_2_BOOK', name:'Ultimate Jerry II Book', market:'bz', rarity:'uncommon', icon:'UJ', coinsToOpen:1000000},
+  {weight:1, quality:10, id:'WITHER_ESSENCE', name:'Wither Essence (1)', market:'bz', rarity:'uncommon', icon:'WE', coinsToOpen:0, qty:1, bonusDrop:true},
+  {weight:0, quality:1, id:'UNDEAD_ESSENCE_SINGLE', name:'Undead Essence (1)', market:'bz', rarity:'uncommon', icon:'UE', coinsToOpen:0, qty:1, bonusDrop:true, priceId:'UNDEAD_ESSENCE'},
+  {weight:0, quality:0, id:'WITHER_SHARD', name:'Wither Shard', market:'ignore', rarity:'uncommon', icon:'WS', coinsToOpen:0, bonusDrop:true, guaranteed:true},
+  {weight:0, quality:0, id:'UNDEAD_ESSENCE_100', name:'Undead Essence (100)', market:'bz', rarity:'uncommon', icon:'UE', coinsToOpen:0, qty:100, bonusDrop:true, guaranteed:true, priceId:'UNDEAD_ESSENCE'},
+  {weight:0, quality:0, id:'WITHER_ESSENCE_80', name:'Wither Essence (80)', market:'bz', rarity:'uncommon', icon:'WE', coinsToOpen:0, qty:80, bonusDrop:true, guaranteed:true, priceId:'WITHER_ESSENCE'}
+];
+const TOTAL_WEIGHT = LOOT.reduce((s, i) => s + i.weight, 0);
+const M4_OBSIDIAN_LOOT = [
+  {weight:8, quality:270, id:'SECOND_MASTER_STAR', name:'Second Master Star', market:'bz', rarity:'rare', icon:'2S', coinsToOpen:6000000},
+  {weight:1, quality:270, id:'SPIRIT_MASK', name:'Spirit Mask', market:'ah', rarity:'rare', icon:'SM', coinsToOpen:15000000},
+  {weight:4, quality:260, id:'SPIRIT_BOOTS', name:'Spirit Boots', market:'ah', rarity:'rare', icon:'SB', coinsToOpen:4000000},
+  {weight:4, quality:260, id:'SPIRIT_SHORTBOW', name:'Spirit Shortbow', market:'ah', rarity:'rare', icon:'SS', coinsToOpen:4000000},
+  {weight:4, quality:260, id:'SPIRIT_SWORD', name:'Spirit Sword', market:'ah', rarity:'rare', icon:'SW', coinsToOpen:3000000},
+  {weight:12, quality:250, id:'MASTER_SKULL_TIER_3', name:'Master Skull - Tier 3', market:'ah', rarity:'rare', icon:'M3', coinsToOpen:2000000},
+  {weight:12, quality:250, id:'RECOMBOBULATOR_3000', name:'Recombobulator 3000', market:'bz', rarity:'uncommon', icon:'R3', coinsToOpen:6000000},
+  {weight:8, quality:250, id:'SPIRIT_WING', name:'Spirit Wing', market:'bz', rarity:'uncommon', icon:'WG', coinsToOpen:2000000},
+  {weight:8, quality:240, id:'SPIRIT_BONE', name:'Spirit Bone', market:'bz', rarity:'uncommon', icon:'BN', coinsToOpen:1500000},
+  {weight:12, quality:220, id:'FUMING_POTATO_BOOK', name:'Fuming Potato Book', market:'bz', rarity:'uncommon', icon:'FP', coinsToOpen:1500000},
+  {weight:4, quality:210, id:'SPIRIT_PET', name:'Spirit Pet', market:'ah', rarity:'rare', icon:'PT', coinsToOpen:5000000},
+  {weight:8, quality:185, id:'SPIRIT_STONE', name:'Spirit Stone', market:'bz', rarity:'uncommon', icon:'ST', coinsToOpen:1500000},
+  {weight:8, quality:170, id:'REND_2_BOOK', name:'Rend II Book', market:'bz', rarity:'uncommon', icon:'RD', coinsToOpen:1000000},
+  {weight:20, quality:160, id:'HOT_POTATO_BOOK', name:'Hot Potato Book', market:'bz', rarity:'uncommon', icon:'HP', coinsToOpen:1000000},
+  {weight:20, quality:120, id:'COMBO_1_BOOK', name:'Combo I Book', market:'bz', rarity:'uncommon', icon:'CB', coinsToOpen:1000000},
+  {weight:16, quality:120, id:'NO_PAIN_NO_GAIN_1_BOOK', name:'No Pain No Gain I Book', market:'bz', rarity:'uncommon', icon:'NG', coinsToOpen:1000000},
+  {weight:32, quality:100, id:'LAST_STAND_1_BOOK', name:'Last Stand I Book', market:'bz', rarity:'uncommon', icon:'LS', coinsToOpen:1000000},
+  {weight:32, quality:100, id:'REJUVENATE_2_BOOK', name:'Rejuvenate II Book', market:'bz', rarity:'uncommon', icon:'RJ', coinsToOpen:1000000},
+  {weight:24, quality:100, id:'BANK_2_BOOK', name:'Bank II Book', market:'bz', rarity:'uncommon', icon:'BK', coinsToOpen:1000000},
+  {weight:24, quality:100, id:'ULTIMATE_WISE_1_BOOK', name:'Ultimate Wise I Book', market:'bz', rarity:'uncommon', icon:'UW', coinsToOpen:1000000},
+  {weight:24, quality:100, id:'WISDOM_1_BOOK', name:'Wisdom I Book', market:'bz', rarity:'uncommon', icon:'WD', coinsToOpen:1000000},
+  {weight:4, quality:100, id:'ULTIMATE_JERRY_2_BOOK', name:'Ultimate Jerry II Book', market:'bz', rarity:'uncommon', icon:'UJ', coinsToOpen:1000000},
+  {weight:4, quality:10, id:'WITHER_ESSENCE', name:'Wither Essence (1)', market:'bz', rarity:'uncommon', icon:'WE', coinsToOpen:0, qty:1, bonusDrop:true},
+  {weight:0, quality:1, id:'UNDEAD_ESSENCE_SINGLE', name:'Undead Essence (1)', market:'bz', rarity:'uncommon', icon:'UE', coinsToOpen:0, qty:1, bonusDrop:true, priceId:'UNDEAD_ESSENCE'},
+  {weight:0, quality:0, id:'THORN_SHARD', name:'Thorn Shard', market:'ignore', rarity:'uncommon', icon:'TS', coinsToOpen:0, bonusDrop:true, guaranteed:true},
+  {weight:0, quality:0, id:'UNDEAD_ESSENCE_90', name:'Undead Essence (90)', market:'bz', rarity:'uncommon', icon:'UE', coinsToOpen:0, qty:90, bonusDrop:true, guaranteed:true, priceId:'UNDEAD_ESSENCE'},
+  {weight:0, quality:0, id:'WITHER_ESSENCE_65', name:'Wither Essence (65)', market:'bz', rarity:'uncommon', icon:'WE', coinsToOpen:0, qty:65, bonusDrop:true, guaranteed:true, priceId:'WITHER_ESSENCE'}
+];
+const M4_EMERALD_LOOT = [
+  {weight:1, quality:260, id:'SPIRIT_BOOTS', name:'Spirit Boots', market:'ah', rarity:'rare', icon:'SB', coinsToOpen:3500000},
+  {weight:1, quality:240, id:'SPIRIT_BONE', name:'Spirit Bone', market:'bz', rarity:'uncommon', icon:'BN', coinsToOpen:1500000},
+  {weight:1, quality:220, id:'FUMING_POTATO_BOOK', name:'Fuming Potato Book', market:'bz', rarity:'uncommon', icon:'FP', coinsToOpen:1000000},
+  {weight:1, quality:210, id:'SPIRIT_PET', name:'Spirit Pet', market:'ah', rarity:'rare', icon:'PT', coinsToOpen:5000000},
+  {weight:2, quality:185, id:'SPIRIT_STONE', name:'Spirit Stone', market:'bz', rarity:'uncommon', icon:'ST', coinsToOpen:1000000},
+  {weight:2, quality:170, id:'REND_2_BOOK', name:'Rend II Book', market:'bz', rarity:'uncommon', icon:'RD', coinsToOpen:500000},
+  {weight:7, quality:160, id:'HOT_POTATO_BOOK', name:'Hot Potato Book', market:'bz', rarity:'uncommon', icon:'HP', coinsToOpen:500000},
+  {weight:12, quality:130, id:'REJUVENATE_2_BOOK', name:'Rejuvenate II Book', market:'bz', rarity:'uncommon', icon:'RJ', coinsToOpen:500000},
+  {weight:10, quality:120, id:'COMBO_1_BOOK', name:'Combo I Book', market:'bz', rarity:'uncommon', icon:'CB', coinsToOpen:500000},
+  {weight:10, quality:120, id:'NO_PAIN_NO_GAIN_1_BOOK', name:'No Pain No Gain I Book', market:'bz', rarity:'uncommon', icon:'NG', coinsToOpen:500000},
+  {weight:18, quality:100, id:'BANK_1_BOOK', name:'Bank I Book', market:'bz', rarity:'uncommon', icon:'BK', coinsToOpen:500000},
+  {weight:10, quality:100, id:'LAST_STAND_1_BOOK', name:'Last Stand I Book', market:'bz', rarity:'uncommon', icon:'LS', coinsToOpen:500000},
+  {weight:10, quality:100, id:'ULTIMATE_WISE_1_BOOK', name:'Ultimate Wise I Book', market:'bz', rarity:'uncommon', icon:'UW', coinsToOpen:500000},
+  {weight:10, quality:100, id:'WISDOM_1_BOOK', name:'Wisdom I Book', market:'bz', rarity:'uncommon', icon:'WD', coinsToOpen:500000},
+  {weight:1, quality:100, id:'ULTIMATE_JERRY_2_BOOK', name:'Ultimate Jerry II Book', market:'bz', rarity:'uncommon', icon:'UJ', coinsToOpen:500000},
+  {weight:10, quality:80, id:'FEATHER_FALLING_6_BOOK', name:'Feather Falling VI Book', market:'bz', rarity:'uncommon', icon:'FF', coinsToOpen:500000},
+  {weight:4, quality:80, id:'INFINITE_QUIVER_6_BOOK', name:'Infinite Quiver VI Book', market:'bz', rarity:'uncommon', icon:'IQ', coinsToOpen:500000},
+  {weight:1, quality:10, id:'WITHER_ESSENCE', name:'Wither Essence (1)', market:'bz', rarity:'uncommon', icon:'WE', coinsToOpen:0, qty:1, bonusDrop:true},
+  {weight:0, quality:1, id:'UNDEAD_ESSENCE_SINGLE', name:'Undead Essence (1)', market:'bz', rarity:'uncommon', icon:'UE', coinsToOpen:0, qty:1, bonusDrop:true, priceId:'UNDEAD_ESSENCE'},
+  {weight:0, quality:0, id:'THORN_SHARD', name:'Thorn Shard', market:'ignore', rarity:'uncommon', icon:'TS', coinsToOpen:0, bonusDrop:true, guaranteed:true},
+  {weight:0, quality:0, id:'UNDEAD_ESSENCE_80', name:'Undead Essence (80)', market:'bz', rarity:'uncommon', icon:'UE', coinsToOpen:0, qty:80, bonusDrop:true, guaranteed:true, priceId:'UNDEAD_ESSENCE'},
+  {weight:0, quality:0, id:'WITHER_ESSENCE_55', name:'Wither Essence (55)', market:'bz', rarity:'uncommon', icon:'WE', coinsToOpen:0, qty:55, bonusDrop:true, guaranteed:true, priceId:'WITHER_ESSENCE'}
+];
+const QUALITY_CAP = 447;
+const M7_SCORE_CONFIG = {
+  s: { bedrockCap:481, obsidianCap:427 },
+  splus: { bedrockCap:502, obsidianCap:447 }
+};
+const BZ_IDS = { IMPLOSION_SCROLL:'IMPLOSION_SCROLL', SHADOW_WARP_SCROLL:'SHADOW_WARP_SCROLL', WITHER_SHIELD_SCROLL:'WITHER_SHIELD_SCROLL', ONE_FOR_ALL_BOOK:'ENCHANTMENT_ONE_FOR_ALL_1', RECOMBOBULATOR_3000:'RECOMBOBULATOR_3000', SOUL_EATER_BOOK:'ENCHANTMENT_SOUL_EATER_5', SOUL_EATER_4_BOOK:'ENCHANTMENT_SOUL_EATER_4', SOUL_EATER_1_BOOK:'ENCHANTMENT_SOUL_EATER_1', FUMING_POTATO_BOOK:'FUMING_POTATO_BOOK', HOT_POTATO_BOOK:'HOT_POTATO_BOOK', WITHER_BLOOD:'WITHER_BLOOD', WITHER_CATALYST:'WITHER_CATALYST', PRECURSOR_GEAR:'PRECURSOR_GEAR', COMBO_BOOK:'ENCHANTMENT_COMBO_2', COMBO_2_BOOK:'ENCHANTMENT_COMBO_2', COMBO_1_BOOK:'ENCHANTMENT_COMBO_1', NO_PAIN_NO_GAIN_BOOK:'ENCHANTMENT_NO_PAIN_NO_GAIN_2', NO_PAIN_NO_GAIN_2_BOOK:'ENCHANTMENT_NO_PAIN_NO_GAIN_2', NO_PAIN_NO_GAIN_1_BOOK:'ENCHANTMENT_NO_PAIN_NO_GAIN_1', LAST_STAND_BOOK:'ENCHANTMENT_LAST_STAND_2', LAST_STAND_1_BOOK:'ENCHANTMENT_LAST_STAND_1', REJUVENATE_BOOK:'ENCHANTMENT_REJUVENATE_3', REJUVENATE_3_BOOK:'ENCHANTMENT_REJUVENATE_3', REJUVENATE_2_BOOK:'ENCHANTMENT_REJUVENATE_2', REJUVENATE_1_BOOK:'ENCHANTMENT_REJUVENATE_1', ULTIMATE_WISE_BOOK:'ENCHANTMENT_ULTIMATE_WISE_2', ULTIMATE_WISE_2_BOOK:'ENCHANTMENT_ULTIMATE_WISE_2', ULTIMATE_WISE_1_BOOK:'ENCHANTMENT_ULTIMATE_WISE_1', ULTIMATE_JERRY_BOOK:'ENCHANTMENT_ULTIMATE_JERRY_3', ULTIMATE_JERRY_3_BOOK:'ENCHANTMENT_ULTIMATE_JERRY_3', ULTIMATE_JERRY_2_BOOK:'ENCHANTMENT_ULTIMATE_JERRY_2', BANK_BOOK:'ENCHANTMENT_BANK_3', BANK_2_BOOK:'ENCHANTMENT_BANK_2', BANK_1_BOOK:'ENCHANTMENT_BANK_1', ULTIMATE_BANK_2_BOOK:'ENCHANTMENT_ULTIMATE_BANK_2', WISDOM_BOOK:'ENCHANTMENT_WISDOM_2', WISDOM_2_BOOK:'ENCHANTMENT_WISDOM_2', WISDOM_1_BOOK:'ENCHANTMENT_WISDOM_1', INFINITE_QUIVER_BOOK:'ENCHANTMENT_INFINITE_QUIVER_7', INFINITE_QUIVER_7_BOOK:'ENCHANTMENT_INFINITE_QUIVER_7', INFINITE_QUIVER_6_BOOK:'ENCHANTMENT_INFINITE_QUIVER_6', FEATHER_FALLING_BOOK:'ENCHANTMENT_FEATHER_FALLING_7', FEATHER_FALLING_7_BOOK:'ENCHANTMENT_FEATHER_FALLING_7', FEATHER_FALLING_6_BOOK:'ENCHANTMENT_FEATHER_FALLING_6', WITHER_ESSENCE:'ESSENCE_WITHER', UNDEAD_ESSENCE:'ESSENCE_UNDEAD', THUNDERLORD_VII_BOOK:'ENCHANTMENT_THUNDERLORD_7', FIFTH_MASTER_STAR:'FIFTH_MASTER_STAR', SECOND_MASTER_STAR:'SECOND_MASTER_STAR', REND_2_BOOK:'ENCHANTMENT_REND_2', SPIRIT_STONE:'SPIRIT_STONE' };
+const AH_IDS = { NECRONS_HANDLE:'NECRON_HANDLE', WITHER_CHESTPLATE:'WITHER_CHESTPLATE', WITHER_LEGGINGS:'WITHER_LEGGINGS', WITHER_CLOAK_SWORD:'WITHER_CLOAK', WITHER_HELMET:'WITHER_HELMET', WITHER_BOOTS:'WITHER_BOOTS', AUTO_RECOMBOBULATOR:'AUTO_RECOMBOBULATOR', DARK_CLAYMORE:'DARK_CLAYMORE', MASTER_SKULL_TIER_5:'MASTER_SKULL_TIER_5', MASTER_SKULL_TIER_4:'MASTER_SKULL_TIER_4', MASTER_SKULL_TIER_3:'MASTER_SKULL_TIER_3', SPIRIT_MASK:'SPIRIT_MASK', SPIRIT_BOOTS:'SPIRIT_BOOTS', SPIRIT_SHORTBOW:'SPIRIT_SHORTBOW', SPIRIT_SWORD:'SPIRIT_SWORD', SPIRIT_PET:'SPIRIT_PET', SPIRIT_WING:'SPIRIT_WING', SPIRIT_BONE:'SPIRIT_BONE' };
+
+let prices = {};
+let kismetOn = true;
+let simChart = null;
+let simKismetOn = true;
+let simAutoKismetOn = false;
+let simAutoKismetThreshold = 0;
+let hideNoValueItems = true;
+let hideNegativeProfitItems = true;
+let hideNegativeBreakdownItems = true;
+let currentCalcFloor = 'm7';
+let m7SRunRate = 0;
+let paulOn = false;
+let currentSimFloor = 'f7';
+let simState = 'idle';
+let simCurrentDrops = null;
+let simCurrentCost = 0;
+let simKismetUsedThisRun = false;
+let session = { total:0, runs:0, best:-Infinity, log:[] };
+
+function switchTab(t) {
+  document.querySelectorAll('.tab').forEach((el, i) => el.classList.toggle('active', ['calc', 'sim'][i] === t));
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + t).classList.add('active');
+}
+function toggleKismet() {
+  kismetOn = !kismetOn;
+  document.getElementById('kismetToggle').classList.toggle('on', kismetOn);
+  document.getElementById('kismetControls').style.display = kismetOn ? 'block' : 'none';
+}
+function toggleSimKismet() {
+  simKismetOn = !simKismetOn;
+  document.getElementById('simKismetToggle').classList.toggle('on', simKismetOn);
+}
+function toggleSimAutoKismet() {
+  simAutoKismetOn = document.getElementById('simAutoKismetCheck').checked;
+  document.getElementById('simAutoKismetSettings').style.display = simAutoKismetOn ? 'block' : 'none';
+}
+function updateSimAutoKismetThreshold() {
+  simAutoKismetThreshold = parseFloat(document.getElementById('simAutoKismetThreshold').value) || 0;
+}
+function fmtC(n) {
+  if (Math.abs(n) >= 1e9) return (n / 1e9).toFixed(2) + 'B';
+  if (Math.abs(n) >= 1e6) return (n / 1e6).toFixed(2) + 'M';
+  if (Math.abs(n) >= 1e3) return (n / 1e3).toFixed(1) + 'K';
+  return Math.round(n).toLocaleString();
+}
+function afterTax(item, raw) {
+  return item.market === 'bz' ? raw * 0.9875 : raw * 0.99;
+}
+function getPrice(id) {
+  return prices[id] || 0;
+}
+function getItemPrice(item) {
+  return getPrice(item.priceId || item.id);
+}
+function getOpenCost(item) {
+  const baseCost = item ? (item.coinsToOpen || 0) : 0;
+  return paulOn ? baseCost * 0.8 : baseCost;
+}
+function itemNetValue(item) {
+  return afterTax(item, getItemPrice(item)) * (item.qty || 1);
+}
+function isBookItem(item) {
+  return item.name.includes('Book');
+}
+function itemProfit(item) {
+  return itemNetValue(item) - getOpenCost(item);
+}
+function pickWeightedItem(pool) {
+  const totalWeight = pool.reduce((sum, item) => sum + item.weight, 0);
+  let roll = Math.random() * totalWeight;
+  for (const item of pool) {
+    roll -= item.weight;
+    if (roll <= 0) return item;
+  }
+  return pool[pool.length - 1] || null;
+}
+function toggleHideNoValueItems() {
+  hideNoValueItems = document.getElementById('hideNoValueItemsCheck').checked;
+  renderPriceTable();
+}
+function toggleHideNegativeProfitItems() {
+  hideNegativeProfitItems = document.getElementById('hideNegativeProfitItemsCheck').checked;
+  renderPriceTable();
+}
+function toggleHideNegativeBreakdownItems() {
+  hideNegativeBreakdownItems = document.getElementById('hideNegativeBreakdownItemsCheck')?.checked || false;
+  applyBreakdownFilter();
+}
+function togglePaul() {
+  paulOn = document.getElementById('paulToggleCheck').checked;
+  renderPriceTable();
+}
+function applyBreakdownFilter() {
+  document.querySelectorAll('.drop-breakdown-row.neg').forEach(row => {
+    row.style.display = hideNegativeBreakdownItems ? 'none' : '';
+  });
+}
+function getPrimaryLoot(loot) {
+  return loot.filter(item => !item.bonusDrop);
+}
+function getBonusLoot(loot) {
+  return loot.filter(item => item.bonusDrop);
+}
+function getCalcLootForFloor(floor) {
+  if (floor === 'm7') return [...M7_BEDROCK_LOOT, ...M7_OBSIDIAN_LOOT, ...M7_S_BEDROCK_LOOT, ...M7_S_OBSIDIAN_LOOT];
+  if (floor === 'm4') return [...M4_OBSIDIAN_LOOT, ...M4_EMERALD_LOOT];
+  return LOOT;
+}
+function syncCalcFloorState() {
+  const select = document.getElementById('calcFloor');
+  if (select) currentCalcFloor = select.value;
+  return currentCalcFloor;
+}
+function getUniqueLootItems(loot) {
+  const seen = new Set();
+  return loot.filter(item => {
+    const key = item.priceId || item.id;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+function changeCalcFloor() {
+  currentCalcFloor = syncCalcFloorState();
+  const note = document.getElementById('floorNotice');
+  const mixControls = document.getElementById('m7ScoreMixControls');
+  if (currentCalcFloor === 'm7') {
+    note.textContent = 'M7 uses Bedrock + Obsidian with a 500k Emerald fallback and Bedrock-only rerolls.';
+    mixControls.style.display = 'block';
+  } else if (currentCalcFloor === 'm4') {
+    note.textContent = 'M4 uses Obsidian + Wood with a 100k fallback and Obsidian-only rerolls.';
+    mixControls.style.display = 'none';
+  } else {
+    note.textContent = 'F7 simulation with max boss luck assumptions.';
+    mixControls.style.display = 'none';
+  }
+  renderPriceTable();
+  renderManualPriceInputs();
+}
+function getSimLootForFloor() {
+  if (currentSimFloor === 'm7') return M7_BEDROCK_LOOT;
+  if (currentSimFloor === 'm4') return M4_OBSIDIAN_LOOT;
+  return LOOT;
+}
+function getSimFloorLabel() {
+  if (currentSimFloor === 'm7') return 'M7';
+  if (currentSimFloor === 'm4') return 'M4';
+  return 'F7';
+}
+function getSimChestTypeLabel() {
+  if (currentSimFloor === 'm7') return 'BEDROCK CHEST';
+  if (currentSimFloor === 'm4') return 'OBSIDIAN CHEST';
+  return 'BEDROCK CHEST';
+}
+function changeSimFloor() {
+  currentSimFloor = document.getElementById('simFloor').value;
+  resetSession();
+}
+function updateM7SRate() {
+  const pct = Math.max(0, Math.min(100, parseFloat(document.getElementById('m7SRate').value) || 0));
+  document.getElementById('m7SRate').value = pct;
+  document.getElementById('m7SRateValue').textContent = `${pct}%`;
+  m7SRunRate = pct / 100;
+}
+function rollChest(loot = LOOT, qualityCap = QUALITY_CAP) {
+  let qualityUsed = 0;
+  const drops = [];
+  let bonusRollChance = 0.42;
+  const primaryLoot = getPrimaryLoot(loot);
+  const bonusLoot = getBonusLoot(loot);
+
+  while (true) {
+    const pool = primaryLoot.filter(item => qualityUsed + item.quality <= qualityCap);
+    if (pool.length === 0) break;
+    if (drops.length > 0 && Math.random() > bonusRollChance) break;
+
+    const picked = pickWeightedItem(pool);
+    if (!picked) break;
+
+    drops.push(picked.id);
+    qualityUsed += picked.quality;
+
+    if (qualityUsed >= qualityCap) break;
+    bonusRollChance *= 0.58;
+  }
+
+  if (drops.length === 0) {
+    const fallback = pickWeightedItem(primaryLoot.filter(item => item.quality <= qualityCap));
+    if (fallback) drops.push(fallback.id);
+  }
+
+  if (bonusLoot.length && Math.random() < 0.6) {
+    const bonus = bonusLoot.filter(item => Math.random() < (item.id.includes('WITHER_ESSENCE') ? 0.45 : 0.3));
+    for (const item of bonus) {
+      drops.push(item.id);
+    }
+  }
+
+  for (const item of bonusLoot.filter(item => item.guaranteed)) {
+    drops.push(item.id);
+  }
+
+  return drops;
+}
+function getLootItem(loot, id) {
+  return loot.find(i => i.id === id);
+}
+function chestValue(drops, loot = LOOT) {
+  let total = 0;
+  for (const id of drops) {
+    const item = getLootItem(loot, id);
+    if (!item || item.market === 'ignore') continue;
+    total += itemNetValue(item);
+  }
+  return total;
+}
+function chestCost(drops, loot = LOOT) {
+  return drops.reduce((max, id) => {
+    const item = getLootItem(loot, id);
+    return Math.max(max, item ? getOpenCost(item) : 0);
+  }, 0);
+}
+const COFL = 'https://sky.coflnet.com/api';
+
+async function fetchPrices() {
+  document.getElementById('apiStatus').textContent = 'LOADING PRICES...';
+  document.getElementById('apiStatus').style.color = 'var(--text3)';
+  document.getElementById('apiDot').style.background = 'var(--text3)';
+
+  try {
+    const bzResults = await Promise.allSettled(
+      Object.entries(BZ_IDS).map(([itemId, bzTag]) =>
+        fetch(`${COFL}/bazaar/${bzTag}/snapshot`)
+          .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+          .then(d => ({ itemId, price: d.sellPrice || d.buyPrice || 0 }))
+      )
+    );
+
+    const ahResults = await Promise.allSettled(
+      Object.entries(AH_IDS).map(([itemId, ahTag]) =>
+        fetch(`${COFL}/auctions/tag/${ahTag}/sold?pageSize=50`)
+          .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+          .then(arr => {
+            if (!arr || arr.length === 0) return { itemId, price: 0 };
+            const sorted = arr.map(a => a.highestBidAmount || a.startingBid || 0).filter(p => p > 0).sort((a, b) => a - b);
+            return { itemId, price: sorted[Math.floor(sorted.length / 2)] || 0 };
+          })
+      )
+    );
+
+    prices = {};
+    let loaded = 0;
+    for (const r of bzResults) if (r.status === 'fulfilled' && r.value.price > 0) { prices[r.value.itemId] = r.value.price; loaded++; }
+    for (const r of ahResults) if (r.status === 'fulfilled' && r.value.price > 0) { prices[r.value.itemId] = r.value.price; loaded++; }
+
+    const total = Object.keys(BZ_IDS).length + Object.keys(AH_IDS).length;
+    if (loaded === 0) throw new Error('No prices loaded');
+    renderPriceTable();
+    renderManualPriceInputs();
+    document.getElementById('apiStatus').textContent = `LIVE (${loaded}/${total})`;
+    document.getElementById('apiStatus').style.color = 'var(--accent3)';
+    document.getElementById('apiDot').style.background = 'var(--accent3)';
+    document.getElementById('apiDot').style.boxShadow = '0 0 6px var(--accent3)';
+  } catch (e) {
+    console.error('Price fetch error:', e);
+    renderPriceTable();
+    renderManualPriceInputs();
+    document.getElementById('apiStatus').textContent = 'PARTIAL - ENTER MANUAL PRICES';
+    document.getElementById('apiStatus').style.color = 'var(--red)';
+    document.getElementById('apiDot').style.background = 'var(--red)';
+    document.getElementById('apiDot').style.boxShadow = 'none';
+  }
+}
+
+function renderManualPriceInputs() {
+  const activeFloor = syncCalcFloorState();
+  const missingItems = getUniqueLootItems(getCalcLootForFloor(activeFloor))
+    .filter(i => i.market === 'ah' && (!prices[i.id] || prices[i.id] <= 0));
+  const existing = document.getElementById('manualPricePanel');
+  if (missingItems.length === 0) {
+    if (existing) existing.remove();
+    return;
+  }
+
+  let panel = existing;
+  if (!panel) {
+    panel = document.createElement('div');
+    panel.id = 'manualPricePanel';
+    panel.className = 'panel manual-price-panel';
+    panel.innerHTML = `
+      <div class="ph"><div class="dot" style="background:var(--red)"></div>MANUAL PRICE INPUT</div>
+      <div class="pb">
+        <div class="manual-price-notice">
+          <div class="notice-title">AUCTION PRICES FAILED TO LOAD</div>
+          Enter prices manually below, then click Apply.
+        </div>
+        <div id="manualPriceRows"></div>
+        <button class="run-btn" onclick="applyManualPrices()" style="margin-top:10px">APPLY MANUAL PRICES</button>
+      </div>`;
+    document.querySelector('#tab-calc .mgrid > div:first-child').appendChild(panel);
+  }
+
+  document.getElementById('manualPriceRows').innerHTML = missingItems.map(item => `
+    <div class="manual-price-row">
+      <span class="iname ${item.rarity}">${item.name}</span>
+      <input type="number" id="manual-${item.id}" placeholder="Price in coins" min="0" step="100000" value="${prices[item.id] || ''}">
+    </div>
+  `).join('');
+}
+
+function applyManualPrices() {
+  const activeFloor = syncCalcFloorState();
+  let applied = 0;
+  for (const item of getUniqueLootItems(getCalcLootForFloor(activeFloor)).filter(i => i.market === 'ah')) {
+    const input = document.getElementById(`manual-${item.id}`);
+    if (!input || !input.value) continue;
+    const val = parseFloat(input.value);
+    if (val > 0) {
+      prices[item.id] = val;
+      applied++;
+    }
+  }
+  if (applied > 0) {
+    renderPriceTable();
+    renderManualPriceInputs();
+    const total = Object.keys(BZ_IDS).length + Object.keys(AH_IDS).length;
+    const loaded = Object.keys(prices).filter(k => prices[k] > 0).length;
+    document.getElementById('apiStatus').textContent = `PARTIAL (${loaded}/${total}) - MANUAL`;
+    document.getElementById('apiStatus').style.color = '#ffaa00';
+    document.getElementById('apiDot').style.background = '#ffaa00';
+  }
+}
+
+function renderPriceTable() {
+  const activeFloor = syncCalcFloorState();
+  const visibleItems = getUniqueLootItems(getCalcLootForFloor(activeFloor))
+    .filter(i => i.market !== 'ignore')
+    .filter(item => !hideNoValueItems || getItemPrice(item) > 0)
+    .filter(item => !hideNegativeProfitItems || itemProfit(item) >= 0)
+    .sort((a, b) => {
+      const aMissingBook = getItemPrice(a) <= 0 && isBookItem(a);
+      const bMissingBook = getItemPrice(b) <= 0 && isBookItem(b);
+      if (aMissingBook !== bMissingBook) return aMissingBook ? 1 : -1;
+      return 0;
+    });
+
+  document.getElementById('priceTableBody').innerHTML = visibleItems.length ? visibleItems.map(item => {
+    const raw = getItemPrice(item);
+    return `<tr>
+      <td><span class="iname ${item.rarity}">${item.name}</span></td>
+      <td><span class="mtag ${item.market}">${item.market.toUpperCase()}</span></td>
+      <td style="font-family:'Share Tech Mono';font-size:11px;color:${raw > 0 ? 'var(--accent3)' : 'var(--text3)'}">${raw > 0 ? fmtC(itemNetValue(item)) : '-'}</td>
+    </tr>`;
+  }).join('') : `<tr><td colspan="3" style="padding:14px;text-align:center;font-family:'Share Tech Mono';font-size:11px;color:var(--text3)">No items to show.</td></tr>`;
+}
+
+function runSimulation() {
+  if (Object.keys(prices).length === 0) { alert('Prices not loaded yet.'); return; }
+  const N = parseInt(document.getElementById('numRuns').value, 10);
+  const threshold = parseInt(document.getElementById('kismetThreshold').value, 10);
+  const KISMET_COST = 1100000;
+  const FREE = 100000;
+  document.getElementById('runBtn').disabled = true;
+  document.getElementById('progressWrap').classList.add('vis');
+
+  const results = [];
+  let totalP = 0, kismetCount = 0, freeCount = 0, handleDrops = 0, implosionDrops = 0, shadowWarpDrops = 0, witherShieldDrops = 0;
+  const dropCounts = {};
+  for (const i of LOOT) dropCounts[i.id] = 0;
+
+  function tally(drops) {
+    for (const id of drops) {
+      dropCounts[id] = (dropCounts[id] || 0) + 1;
+      if (id === 'NECRONS_HANDLE') handleDrops++;
+      if (id === 'IMPLOSION_SCROLL') implosionDrops++;
+      if (id === 'SHADOW_WARP_SCROLL') shadowWarpDrops++;
+      if (id === 'WITHER_SHIELD_SCROLL') witherShieldDrops++;
+    }
+  }
+
+  function simRun() {
+    const drops = rollChest();
+    const profit = chestValue(drops) - chestCost(drops);
+    tally(drops);
+    if (!kismetOn || profit >= threshold) {
+      if (profit > 0) return profit;
+      freeCount++;
+      return FREE;
+    }
+    kismetCount++;
+    const reroll = rollChest();
+    const p2 = chestValue(reroll) - chestCost(reroll);
+    tally(reroll);
+    if (p2 > 0) return p2 - KISMET_COST;
+    freeCount++;
+    return FREE - KISMET_COST;
+  }
+
+  let done = 0;
+  function chunk() {
+    const end = Math.min(done + 5000, N);
+    for (let i = done; i < end; i++) {
+      const r = simRun();
+      results.push(r);
+      totalP += r;
+    }
+    done = end;
+    const pct = Math.round(done / N * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressPct').textContent = pct + '%';
+    if (done < N) setTimeout(chunk, 0);
+    else finish();
+  }
+
+  function finish() {
+    document.getElementById('runBtn').disabled = false;
+    document.getElementById('progressWrap').classList.remove('vis');
+    const avg = totalP / N;
+    const sorted = [...results].sort((a, b) => a - b);
+    const p10 = sorted[Math.floor(N * 0.1)];
+    const p90 = sorted[Math.floor(N * 0.9)];
+    const posRate = (results.filter(r => r > 0).length / N * 100).toFixed(1);
+    const hRate = (handleDrops / N * 100).toFixed(3);
+    const avgClass = avg >= 0 ? 'pos' : 'neg';
+
+    document.getElementById('resultsArea').innerHTML = `
+      <div class="sgrid">
+        <div class="scard ${avgClass}"><div class="slabel">Avg Profit/Run</div><div class="sval ${avgClass}">${fmtC(avg)}</div><div class="ssub">${avg >= 0 ? '+' : ''}${Math.round(avg).toLocaleString()} coins</div></div>
+        <div class="scard neu"><div class="slabel">Median Profit</div><div class="sval neu">${fmtC(median)}</div><div class="ssub">P10: ${fmtC(p10)} / P90: ${fmtC(p90)}</div></div>
+        <div class="scard gld"><div class="slabel">Handle Drop Rate</div><div class="sval gld">${hRate}%</div><div class="ssub">1 in ${handleDrops > 0 ? Math.round(N / handleDrops).toLocaleString() : 'N/A'} runs</div></div>
+        <div class="scard neu"><div class="slabel">Profitable Runs</div><div class="sval neu">${posRate}%</div><div class="ssub">Free: ${(freeCount / N * 100).toFixed(1)}% | Kismet: ${(kismetCount / N * 100).toFixed(1)}%</div></div>
+      </div>
+      <div class="panel" style="margin-bottom:14px"><div class="ph"><div class="dot"></div>PROFIT DISTRIBUTION (${N.toLocaleString()} RUNS)</div><div class="pb"><canvas id="histChart" height="180"></canvas></div></div>
+      <div class="panel"><div class="ph"><div class="dot"></div>DROP BREAKDOWN</div><div class="pb" style="padding:6px">
+        <div class="checkbox-row" style="padding:0 8px 8px">
+          <label class="checkbox-control" for="hideNegativeBreakdownItemsCheck">
+            <input type="checkbox" id="hideNegativeBreakdownItemsCheck" checked onchange="toggleHideNegativeBreakdownItems()" ${hideNegativeBreakdownItems ? 'checked' : ''}>
+            <span class="checkbox-box" aria-hidden="true"></span>
+            <span>Hide negative avg val/run items</span>
+          </label>
+        </div>
+        <table class="dtable"><thead><tr><th>Item</th><th>Count</th><th>Rate</th><th>Frequency</th><th>Avg Val/Run</th></tr></thead><tbody>
+        ${LOOT.filter(i => i.market !== 'ignore').map(item => {
+          const cnt = dropCounts[item.id] || 0;
+          const rate = cnt / N * 100;
+          const avgProfitContribution = itemProfit(item) * (cnt / N);
+          const avgContributionClass = avgProfitContribution >= 0 ? 'var(--accent3)' : 'var(--red)';
+          return `<tr class="drop-breakdown-row ${avgProfitContribution < 0 ? 'neg' : 'pos'}"><td><span class="iname ${item.rarity}">${item.name}</span></td><td style="font-family:'Share Tech Mono';font-size:11px;color:var(--text2)">${cnt.toLocaleString()}</td><td style="font-family:'Share Tech Mono';font-size:11px;color:var(--accent)">${rate.toFixed(2)}%</td><td><div class="bar-track"><div class="bar-fill" style="width:${Math.min(rate / 50 * 100, 100)}%"></div></div></td><td style="font-family:'Share Tech Mono';font-size:11px;color:${avgContributionClass}">${Math.abs(avgProfitContribution) > 100 ? `${avgProfitContribution >= 0 ? '+' : ''}${fmtC(avgProfitContribution)}` : '-'}</td></tr>`;
+        }).join('')}
+        </tbody></table></div></div>
+      <div class="panel" style="margin-top:14px"><div class="ph"><div class="dot"></div>RARE DROP TRACKER</div><div class="pb" style="padding:12px">
+        <div class="sgrid" style="grid-template-columns:repeat(4,1fr)">
+          <div class="scard gld"><div class="slabel">Necron's Handle</div><div class="sval gld">${handleDrops.toLocaleString()}</div><div class="ssub">1 in ${handleDrops > 0 ? Math.round(N / handleDrops).toLocaleString() : 'N/A'} runs</div></div>
+          <div class="scard" style="border-color:var(--purple)"><div class="slabel">Implosion Scroll</div><div class="sval" style="color:var(--purple)">${implosionDrops.toLocaleString()}</div><div class="ssub">1 in ${implosionDrops > 0 ? Math.round(N / implosionDrops).toLocaleString() : 'N/A'} runs</div></div>
+          <div class="scard" style="border-color:var(--purple)"><div class="slabel">Shadow Warp Scroll</div><div class="sval" style="color:var(--purple)">${shadowWarpDrops.toLocaleString()}</div><div class="ssub">1 in ${shadowWarpDrops > 0 ? Math.round(N / shadowWarpDrops).toLocaleString() : 'N/A'} runs</div></div>
+          <div class="scard" style="border-color:var(--purple)"><div class="slabel">Wither Shield Scroll</div><div class="sval" style="color:var(--purple)">${witherShieldDrops.toLocaleString()}</div><div class="ssub">1 in ${witherShieldDrops > 0 ? Math.round(N / witherShieldDrops).toLocaleString() : 'N/A'} runs</div></div>
+        </div></div></div>`;
+    renderHistogram(results);
+    applyBreakdownFilter();
+  }
+
+  setTimeout(chunk, 0);
+}
+function runSimulationForSelectedFloor() {
+  const activeFloor = syncCalcFloorState();
+  if (Object.keys(prices).length === 0) { alert('Prices not loaded yet.'); return; }
+  const N = parseInt(document.getElementById('numRuns').value, 10);
+  const threshold = parseInt(document.getElementById('kismetThreshold').value, 10);
+  const KISMET_COST = 1100000;
+  const FREE = 100000;
+  const EMERALD_FALLBACK = 500000;
+  const M4_FALLBACK = 100000;
+  const isM7 = activeFloor === 'm7';
+  const isM4 = activeFloor === 'm4';
+  const activeLoot = getUniqueLootItems(getCalcLootForFloor(activeFloor));
+  document.getElementById('runBtn').disabled = true;
+  document.getElementById('progressWrap').classList.add('vis');
+
+  const results = [];
+  let totalP = 0;
+  let kismetCount = 0;
+  let freeCount = 0;
+  let handleDrops = 0;
+  let implosionDrops = 0;
+  let shadowWarpDrops = 0;
+  let witherShieldDrops = 0;
+  let recombDrops = 0;
+  let secondStarDrops = 0;
+  let spiritMaskDrops = 0;
+  let spiritWingDrops = 0;
+  let spiritBoneDrops = 0;
+  let m7BedrockWins = 0;
+  let m7ObsidianWins = 0;
+  let m7EmeraldWins = 0;
+  let m7BedrockProfit = 0;
+  let m7ObsidianProfit = 0;
+  let m7SCount = 0;
+  let m7SPlusCount = 0;
+  let m7SProfit = 0;
+  let m7SPlusProfit = 0;
+  let m7SRawProfit = 0;
+  let m7SPlusRawProfit = 0;
+  let m4ObsidianWins = 0;
+  let m4EmeraldWins = 0;
+  let m4ObsidianProfit = 0;
+  const dropCounts = {};
+  const dropContributionSums = {};
+  for (const i of activeLoot) dropCounts[i.id] = 0;
+  for (const i of activeLoot) dropContributionSums[i.id] = 0;
+
+  function tally(drops, lootTable) {
+    for (const id of drops) {
+      dropCounts[id] = (dropCounts[id] || 0) + 1;
+      const item = getLootItem(lootTable, id);
+      if (item && item.market !== 'ignore') {
+        dropContributionSums[id] = (dropContributionSums[id] || 0) + itemProfit(item);
+      }
+      if (id === 'NECRONS_HANDLE') handleDrops++;
+      if (id === 'IMPLOSION_SCROLL') implosionDrops++;
+      if (id === 'SHADOW_WARP_SCROLL') shadowWarpDrops++;
+      if (id === 'WITHER_SHIELD_SCROLL') witherShieldDrops++;
+      if (id === 'RECOMBOBULATOR_3000') recombDrops++;
+      if (id === 'SECOND_MASTER_STAR') secondStarDrops++;
+      if (id === 'SPIRIT_MASK') spiritMaskDrops++;
+      if (id === 'SPIRIT_WING') spiritWingDrops++;
+      if (id === 'SPIRIT_BONE') spiritBoneDrops++;
+    }
+  }
+
+  function simRunF7() {
+    const drops = rollChest(LOOT);
+    const profit = chestValue(drops, LOOT) - chestCost(drops, LOOT);
+    tally(drops, LOOT);
+    if (!kismetOn || profit >= threshold) {
+      if (profit > 0) return profit;
+      freeCount++;
+      return FREE;
+    }
+    kismetCount++;
+    const reroll = rollChest(LOOT);
+    const p2 = chestValue(reroll, LOOT) - chestCost(reroll, LOOT);
+    tally(reroll, LOOT);
+    if (p2 > 0) return p2 - KISMET_COST;
+    freeCount++;
+    return FREE - KISMET_COST;
+  }
+
+  function simRunM7() {
+    const isSRun = Math.random() < m7SRunRate;
+    const scoreConfig = isSRun ? M7_SCORE_CONFIG.s : M7_SCORE_CONFIG.splus;
+    const bedrockLoot = isSRun ? M7_S_BEDROCK_LOOT : M7_BEDROCK_LOOT;
+    const obsidianLoot = isSRun ? M7_S_OBSIDIAN_LOOT : M7_OBSIDIAN_LOOT;
+    const bedrockDrops = rollChest(bedrockLoot, scoreConfig.bedrockCap);
+    const obsidianDrops = rollChest(obsidianLoot, scoreConfig.obsidianCap);
+    const bedrockProfit = chestValue(bedrockDrops, bedrockLoot) - chestCost(bedrockDrops, bedrockLoot);
+    const obsidianProfit = chestValue(obsidianDrops, obsidianLoot) - chestCost(obsidianDrops, obsidianLoot);
+    tally(bedrockDrops, bedrockLoot);
+    tally(obsidianDrops, obsidianLoot);
+
+    const options = [
+      { source:'bedrock', profit:bedrockProfit },
+      { source:'obsidian', profit:obsidianProfit },
+      { source:'emerald', profit:EMERALD_FALLBACK }
+    ];
+    const rawBestProfit = Math.max(bedrockProfit, obsidianProfit);
+
+    if (kismetOn && bedrockProfit < threshold) {
+      kismetCount++;
+      const rerollDrops = rollChest(bedrockLoot, scoreConfig.bedrockCap);
+      const rerollProfit = chestValue(rerollDrops, bedrockLoot) - chestCost(rerollDrops, bedrockLoot) - KISMET_COST;
+      tally(rerollDrops, bedrockLoot);
+      options.push({ source:'bedrock', profit:rerollProfit });
+    }
+
+    const best = options.reduce((top, option) => option.profit > top.profit ? option : top, options[0]);
+    if (best.source === 'bedrock') { m7BedrockWins++; m7BedrockProfit += best.profit; }
+    if (best.source === 'obsidian') { m7ObsidianWins++; m7ObsidianProfit += best.profit; }
+    if (best.source === 'emerald') m7EmeraldWins++;
+    if (isSRun) {
+      m7SCount++;
+      m7SProfit += best.profit;
+      m7SRawProfit += rawBestProfit;
+    } else {
+      m7SPlusCount++;
+      m7SPlusProfit += best.profit;
+      m7SPlusRawProfit += rawBestProfit;
+    }
+    return best.profit;
+  }
+
+  function simRunM4() {
+    const obsidianDrops = rollChest(M4_OBSIDIAN_LOOT, 429);
+    const emeraldDrops = rollChest(M4_EMERALD_LOOT, 347);
+    const obsidianProfit = chestValue(obsidianDrops, M4_OBSIDIAN_LOOT) - chestCost(obsidianDrops, M4_OBSIDIAN_LOOT);
+    const emeraldProfitRaw = chestValue(emeraldDrops, M4_EMERALD_LOOT) - chestCost(emeraldDrops, M4_EMERALD_LOOT);
+    const emeraldProfit = Math.max(emeraldProfitRaw, M4_FALLBACK);
+    tally(obsidianDrops, M4_OBSIDIAN_LOOT);
+    tally(emeraldDrops, M4_EMERALD_LOOT);
+
+    const options = [
+      { source:'obsidian', profit:obsidianProfit },
+      { source:'emerald', profit:emeraldProfit }
+    ];
+
+    if (kismetOn && obsidianProfit < threshold) {
+      kismetCount++;
+      const rerollDrops = rollChest(M4_OBSIDIAN_LOOT, 429);
+      const rerollProfit = chestValue(rerollDrops, M4_OBSIDIAN_LOOT) - chestCost(rerollDrops, M4_OBSIDIAN_LOOT) - KISMET_COST;
+      tally(rerollDrops, M4_OBSIDIAN_LOOT);
+      options.push({ source:'obsidian', profit:rerollProfit });
+    }
+
+    const best = options.reduce((top, option) => option.profit > top.profit ? option : top, options[0]);
+    if (best.source === 'obsidian') {
+      m4ObsidianWins++;
+      m4ObsidianProfit += best.profit;
+    } else {
+      m4EmeraldWins++;
+    }
+    return best.profit;
+  }
+
+  let done = 0;
+  function chunk() {
+    const end = Math.min(done + 5000, N);
+    for (let i = done; i < end; i++) {
+      const r = isM7 ? simRunM7() : isM4 ? simRunM4() : simRunF7();
+      results.push(r);
+      totalP += r;
+    }
+    done = end;
+    const pct = Math.round(done / N * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressPct').textContent = pct + '%';
+    if (done < N) setTimeout(chunk, 0);
+    else finish();
+  }
+
+  function finish() {
+    document.getElementById('runBtn').disabled = false;
+    document.getElementById('progressWrap').classList.remove('vis');
+    const avg = totalP / N;
+    const sorted = [...results].sort((a, b) => a - b);
+    const median = sorted[Math.floor(N / 2)];
+    const p10 = sorted[Math.floor(N * 0.1)];
+    const p90 = sorted[Math.floor(N * 0.9)];
+    const posRate = (results.filter(r => r > 0).length / N * 100).toFixed(1);
+    const hRate = (handleDrops / N * 100).toFixed(3);
+    const avgClass = avg >= 0 ? 'pos' : 'neg';
+    const sourceBreakdown = isM7 ? `
+      <div class="panel" style="margin-top:14px"><div class="ph"><div class="dot"></div>M7 SOURCE BREAKDOWN</div><div class="pb">
+        <div class="sgrid">
+          <div class="scard neu"><div class="slabel">Bedrock Chosen</div><div class="sval neu">${m7BedrockWins.toLocaleString()}</div><div class="ssub">Avg ${m7BedrockWins ? fmtC(m7BedrockProfit / m7BedrockWins) : '-'}</div></div>
+          <div class="scard neu"><div class="slabel">Obsidian Chosen</div><div class="sval neu">${m7ObsidianWins.toLocaleString()}</div><div class="ssub">Avg ${m7ObsidianWins ? fmtC(m7ObsidianProfit / m7ObsidianWins) : '-'}</div></div>
+          <div class="scard gld"><div class="slabel">Emerald Fallback</div><div class="sval gld">${m7EmeraldWins.toLocaleString()}</div><div class="ssub">Flat ${fmtC(EMERALD_FALLBACK)}</div></div>
+          <div class="scard ${avgClass}"><div class="slabel">Run Mix</div><div class="sval ${avgClass}">${Math.round(m7SRunRate * 100)}%</div><div class="ssub">S runs / ${Math.round((1 - m7SRunRate) * 100)}% S+</div></div>
+          <div class="scard neu"><div class="slabel">S Avg Profit</div><div class="sval neu">${m7SCount ? fmtC(m7SProfit / m7SCount) : '-'}</div><div class="ssub">Raw chest avg: ${m7SCount ? fmtC(m7SRawProfit / m7SCount) : '-'}</div></div>
+          <div class="scard neu"><div class="slabel">S+ Avg Profit</div><div class="sval neu">${m7SPlusCount ? fmtC(m7SPlusProfit / m7SPlusCount) : '-'}</div><div class="ssub">Raw chest avg: ${m7SPlusCount ? fmtC(m7SPlusRawProfit / m7SPlusCount) : '-'}</div></div>
+        </div></div></div>` : '';
+    const floorSourceBreakdown = isM7 ? sourceBreakdown : isM4 ? `
+      <div class="panel" style="margin-top:14px"><div class="ph"><div class="dot"></div>M4 SOURCE BREAKDOWN</div><div class="pb">
+        <div class="sgrid" style="grid-template-columns:repeat(3,1fr)">
+          <div class="scard neu"><div class="slabel">Obsidian Chosen</div><div class="sval neu">${m4ObsidianWins.toLocaleString()}</div><div class="ssub">Avg ${m4ObsidianWins ? fmtC(m4ObsidianProfit / m4ObsidianWins) : '-'}</div></div>
+          <div class="scard gld"><div class="slabel">Wood Fallback</div><div class="sval gld">${m4EmeraldWins.toLocaleString()}</div><div class="ssub">At least ${fmtC(M4_FALLBACK)}</div></div>
+          <div class="scard ${avgClass}"><div class="slabel">Fallback Rate</div><div class="sval ${avgClass}">${(m4EmeraldWins / N * 100).toFixed(1)}%</div><div class="ssub">${m4EmeraldWins.toLocaleString()} of ${N.toLocaleString()} runs</div></div>
+        </div></div></div>` : '';
+
+    document.getElementById('resultsArea').innerHTML = `
+      <div class="sgrid">
+        <div class="scard ${avgClass}"><div class="slabel">Avg Profit/Run</div><div class="sval ${avgClass}">${fmtC(avg)}</div><div class="ssub">${avg >= 0 ? '+' : ''}${Math.round(avg).toLocaleString()} coins</div></div>
+        <div class="scard neu"><div class="slabel">Range</div><div class="sval neu">${fmtC(p10)} to ${fmtC(p90)}</div><div class="ssub">P10 to P90 outcome band</div></div>
+        <div class="scard gld"><div class="slabel">Handle Drop Rate</div><div class="sval gld">${hRate}%</div><div class="ssub">1 in ${handleDrops > 0 ? Math.round(N / handleDrops).toLocaleString() : 'N/A'} runs</div></div>
+        <div class="scard neu"><div class="slabel">Profitable Runs</div><div class="sval neu">${posRate}%</div><div class="ssub">${isM7 ? `Emerald: ${(m7EmeraldWins / N * 100).toFixed(1)}%` : isM4 ? `Wood: ${(m4EmeraldWins / N * 100).toFixed(1)}%` : `Free: ${(freeCount / N * 100).toFixed(1)}%`} | Kismet: ${(kismetCount / N * 100).toFixed(1)}%</div></div>
+      </div>
+      <div class="panel" style="margin-bottom:14px"><div class="ph"><div class="dot"></div>PROFIT DISTRIBUTION (${N.toLocaleString()} RUNS)</div><div class="pb"><canvas id="histChart" height="180"></canvas></div></div>
+      <div class="panel"><div class="ph"><div class="dot"></div>DROP BREAKDOWN</div><div class="pb" style="padding:6px">
+        <div class="checkbox-row" style="padding:0 8px 8px">
+          <label class="checkbox-control" for="hideNegativeBreakdownItemsCheck">
+            <input type="checkbox" id="hideNegativeBreakdownItemsCheck" onchange="toggleHideNegativeBreakdownItems()" ${hideNegativeBreakdownItems ? 'checked' : ''}>
+            <span class="checkbox-box" aria-hidden="true"></span>
+            <span>Hide negative avg val/run items</span>
+          </label>
+        </div>
+        <table class="dtable"><thead><tr><th>Item</th><th>Count</th><th>Rate</th><th>Frequency</th><th>Avg Val/Run</th></tr></thead><tbody>
+        ${activeLoot.filter(i => i.market !== 'ignore').map(item => {
+          const cnt = dropCounts[item.id] || 0;
+          const rate = cnt / N * 100;
+          const avgProfitContribution = (dropContributionSums[item.id] || 0) / N;
+          const avgContributionClass = avgProfitContribution >= 0 ? 'var(--accent3)' : 'var(--red)';
+          return `<tr class="drop-breakdown-row ${avgProfitContribution < 0 ? 'neg' : 'pos'}"><td><span class="iname ${item.rarity}">${item.name}</span></td><td style="font-family:'Share Tech Mono';font-size:11px;color:var(--text2)">${cnt.toLocaleString()}</td><td style="font-family:'Share Tech Mono';font-size:11px;color:var(--accent)">${rate.toFixed(2)}%</td><td><div class="bar-track"><div class="bar-fill" style="width:${Math.min(rate / 50 * 100, 100)}%"></div></div></td><td style="font-family:'Share Tech Mono';font-size:11px;color:${avgContributionClass}">${Math.abs(avgProfitContribution) > 100 ? `${avgProfitContribution >= 0 ? '+' : ''}${fmtC(avgProfitContribution)}` : '-'}</td></tr>`;
+        }).join('')}
+        </tbody></table></div></div>
+      ${floorSourceBreakdown}
+      <div class="panel" style="margin-top:14px"><div class="ph"><div class="dot"></div>RARE DROP TRACKER</div><div class="pb" style="padding:12px">
+        <div class="sgrid" style="grid-template-columns:repeat(4,1fr)">
+          ${isM4 ? `
+          <div class="scard gld"><div class="slabel">Second Master Star</div><div class="sval gld">${secondStarDrops.toLocaleString()}</div><div class="ssub">1 in ${secondStarDrops > 0 ? Math.round(N / secondStarDrops).toLocaleString() : 'N/A'} runs</div></div>
+          <div class="scard" style="border-color:var(--purple)"><div class="slabel">Spirit Mask</div><div class="sval" style="color:var(--purple)">${spiritMaskDrops.toLocaleString()}</div><div class="ssub">1 in ${spiritMaskDrops > 0 ? Math.round(N / spiritMaskDrops).toLocaleString() : 'N/A'} runs</div></div>
+          <div class="scard neu"><div class="slabel">Spirit Wing</div><div class="sval neu">${spiritWingDrops.toLocaleString()}</div><div class="ssub">1 in ${spiritWingDrops > 0 ? Math.round(N / spiritWingDrops).toLocaleString() : 'N/A'} runs</div></div>
+          <div class="scard neu"><div class="slabel">Spirit Bone</div><div class="sval neu">${spiritBoneDrops.toLocaleString()}</div><div class="ssub">1 in ${spiritBoneDrops > 0 ? Math.round(N / spiritBoneDrops).toLocaleString() : 'N/A'} runs</div></div>
+          <div class="scard neu"><div class="slabel">Recombobulator 3000</div><div class="sval neu">${recombDrops.toLocaleString()}</div><div class="ssub">1 in ${recombDrops > 0 ? Math.round(N / recombDrops).toLocaleString() : 'N/A'} runs</div></div>
+          ` : `
+          <div class="scard gld"><div class="slabel">Necron's Handle</div><div class="sval gld">${handleDrops.toLocaleString()}</div><div class="ssub">1 in ${handleDrops > 0 ? Math.round(N / handleDrops).toLocaleString() : 'N/A'} runs</div></div>
+          <div class="scard" style="border-color:var(--purple)"><div class="slabel">Implosion Scroll</div><div class="sval" style="color:var(--purple)">${implosionDrops.toLocaleString()}</div><div class="ssub">1 in ${implosionDrops > 0 ? Math.round(N / implosionDrops).toLocaleString() : 'N/A'} runs</div></div>
+          <div class="scard" style="border-color:var(--purple)"><div class="slabel">Shadow Warp Scroll</div><div class="sval" style="color:var(--purple)">${shadowWarpDrops.toLocaleString()}</div><div class="ssub">1 in ${shadowWarpDrops > 0 ? Math.round(N / shadowWarpDrops).toLocaleString() : 'N/A'} runs</div></div>
+          <div class="scard" style="border-color:var(--purple)"><div class="slabel">Wither Shield Scroll</div><div class="sval" style="color:var(--purple)">${witherShieldDrops.toLocaleString()}</div><div class="ssub">1 in ${witherShieldDrops > 0 ? Math.round(N / witherShieldDrops).toLocaleString() : 'N/A'} runs</div></div>
+          <div class="scard neu"><div class="slabel">Recombobulator 3000</div><div class="sval neu">${recombDrops.toLocaleString()}</div><div class="ssub">1 in ${recombDrops > 0 ? Math.round(N / recombDrops).toLocaleString() : 'N/A'} runs</div></div>
+          `}
+        </div></div></div>`;
+    renderHistogram(results);
+    applyBreakdownFilter();
+  }
+
+  setTimeout(chunk, 0);
+}
+
+runSimulation = runSimulationForSelectedFloor;
+
+function renderHistogram(results) {
+  if (simChart) {
+    simChart.destroy();
+    simChart = null;
+  }
+  const ctx = document.getElementById('histChart');
+  if (!ctx) return;
+  const min = Math.min(...results);
+  const max = Math.max(...results);
+  const BINS = 40;
+  const sz = (max - min || 1) / BINS;
+  const binsRaw = Array(BINS).fill(0);
+  const labelsRaw = [];
+  for (let i = 0; i < BINS; i++) labelsRaw.push(fmtC(min + i * sz));
+  for (const v of results) {
+    const idx = Math.min(Math.floor((v - min) / sz), BINS - 1);
+    binsRaw[idx]++;
+  }
+  const filtered = binsRaw.map((count, i) => ({
+    count,
+    label: labelsRaw[i],
+    color: (min + i * sz) < 0 ? 'rgba(255,68,68,.7)' : 'rgba(255,140,200,.7)'
+  })).filter(b => b.count > 0);
+
+  simChart = new Chart(ctx, {
+    type:'bar',
+    data:{labels:filtered.map(b => b.label), datasets:[{data:filtered.map(b => b.count), backgroundColor:filtered.map(b => b.color), borderColor:'transparent', borderRadius:2, barPercentage:.9}]},
+    options:{
+      responsive:true,
+      plugins:{legend:{display:false}, tooltip:{callbacks:{label:c => `${c.parsed.y.toLocaleString()} runs`, title:c => `~${c[0].label}`}, backgroundColor:'#141920', borderColor:'#2a3540', borderWidth:1, titleColor:'#c8d8e8', bodyColor:'#7a9ab0'}},
+      scales:{
+        x:{ticks:{color:'#4a6070', font:{family:'Share Tech Mono', size:9}, maxRotation:45, maxTicksLimit:10}, grid:{color:'rgba(30,39,48,.8)'}},
+        y:{type:'logarithmic', ticks:{color:'#4a6070', font:{family:'Share Tech Mono', size:9}, callback:function(v){return [1,2,5,10,20,50,100,200,500,1000,2000,5000,10000].includes(v) ? v.toLocaleString() : null;}}, grid:{color:'rgba(30,39,48,.8)'}}
+      }
+    }
+  });
+}
+
+function FREE_CHEST_VAL() { return 100000; }
+
+function getItemBadge(item) {
+  if (!item || !item.name) return '--';
+  const words = item.name.replace(/[^A-Za-z0-9 ]/g, '').split(/\s+/).filter(Boolean);
+  if (words.length >= 2) return (words[0][0] + words[1][0]).toUpperCase();
+  return words[0] ? words[0].slice(0, 2).toUpperCase() : '--';
+}
+
+function rollNewChest() {
+  if (simState === 'rolled') logAction('SKIPPED', FREE_CHEST_VAL(), 0);
+  simState = 'rolled';
+  simKismetUsedThisRun = false;
+  const simLoot = getSimLootForFloor();
+  simCurrentDrops = rollChest(simLoot);
+  simCurrentCost = chestCost(simCurrentDrops, simLoot);
+  renderSimChest(simCurrentDrops, false);
+}
+
+function renderSimChest(drops, isReroll) {
+  const simLoot = getSimLootForFloor();
+  const val = chestValue(drops, simLoot);
+  const profit = val - simCurrentCost;
+
+  if (simAutoKismetOn && simKismetOn && !simKismetUsedThisRun && simState === 'rolled' && !isReroll && profit < simAutoKismetThreshold) {
+    simKismetUsedThisRun = true;
+    simState = 'rerolled';
+    simCurrentDrops = rollChest(simLoot);
+    simCurrentCost = chestCost(simCurrentDrops, simLoot);
+    renderSimChest(simCurrentDrops, true);
+    return;
+  }
+
+  document.getElementById('simChestTitle').textContent = (isReroll ? 'AUTO-REROLLED - ' : `${getSimChestTypeLabel()} - `) + getSimFloorLabel();
+  document.getElementById('simChestCost').textContent = simCurrentCost > 0 ? `Cost: ${fmtC(simCurrentCost)} coins` : 'Free';
+
+  const valuableDrops = drops.filter(id => getLootItem(simLoot, id)?.market !== 'ignore');
+  const slots = [];
+  for (const id of drops.slice(0, 10)) {
+    const item = getLootItem(simLoot, id);
+    if (!item) continue;
+    slots.push({ item, net: item.market === 'ignore' ? 0 : itemNetValue(item) });
+  }
+  while (slots.length < 5) slots.push(null);
+
+  document.getElementById('chestDisplay').innerHTML = `<div class="chest-items">${slots.map((s, i) => {
+    if (!s) return `<div class="chest-slot empty" style="animation-delay:${i * 0.05}s"><span style="font-size:20px;opacity:.2">.</span></div>`;
+    return `<div class="chest-slot filled ${s.item.rarity} animate" style="animation-delay:${i * 0.05}s"><div class="item-icon">${getItemBadge(s.item)}</div><div class="item-label">${s.item.name.replace(' Book', '').replace(' Scroll', '')}</div>${s.net > 0 ? `<div class="item-val">${fmtC(s.net)}</div>` : ''}</div>`;
+  }).join('')}</div>`;
+
+  document.getElementById('chestActions').style.display = 'flex';
+  const profitColor = profit >= 0 ? 'var(--accent3)' : 'var(--red)';
+  document.getElementById('openBtn').innerHTML = `OPEN CHEST <span style="color:${profitColor};margin-left:6px">(${profit >= 0 ? '+' : ''}${fmtC(profit)})</span>`;
+  document.getElementById('kismetBtn').style.display = simKismetOn && !simKismetUsedThisRun && simState === 'rolled' ? 'inline-block' : 'none';
+  document.getElementById('rerollLabel').textContent = isReroll ? '(rerolled)' : '';
+
+  const rows = valuableDrops.map(id => {
+    const item = getLootItem(simLoot, id);
+    const raw = getPrice(id);
+    return `<tr><td><span class="iname ${item.rarity}">${item.name}</span></td><td style="font-family:'Share Tech Mono';font-size:11px;text-align:right;color:var(--accent3)">${raw > 0 ? fmtC(itemNetValue(item)) : 'No price'}</td></tr>`;
+  });
+  rows.push(`<tr style="border-top:1px solid var(--border2)"><td style="font-family:'Share Tech Mono';font-size:10px;color:var(--text3)">CHEST COST</td><td style="font-family:'Share Tech Mono';font-size:11px;text-align:right;color:var(--red)">-${fmtC(simCurrentCost)}</td></tr>`);
+  rows.push(`<tr><td style="font-family:'Share Tech Mono';font-size:10px;color:var(--text3)">NET PROFIT</td><td style="font-family:'Share Tech Mono';font-size:12px;font-weight:700;text-align:right;color:${profitColor}">${profit >= 0 ? '+' : ''}${fmtC(profit)}</td></tr>`);
+  if (simKismetUsedThisRun) rows.push(`<tr><td style="font-family:'Share Tech Mono';font-size:10px;color:var(--text3)">KISMET COST</td><td style="font-family:'Share Tech Mono';font-size:11px;text-align:right;color:var(--red)">-1.1M</td></tr>`);
+  document.getElementById('chestBreakdown').style.display = 'block';
+  document.getElementById('chestBreakTable').innerHTML = `<tbody>${rows.join('')}</tbody>`;
+}
+
+function openChest() {
+  if (!simCurrentDrops) return;
+  let profit = chestValue(simCurrentDrops, getSimLootForFloor()) - simCurrentCost;
+  if (simKismetUsedThisRun) profit -= 1100000;
+  logAction('OPENED', profit, simCurrentCost);
+  endRun();
+}
+function useKismet() {
+  if (!simCurrentDrops || simKismetUsedThisRun || !simKismetOn) return;
+  simKismetUsedThisRun = true;
+  simState = 'rerolled';
+  const simLoot = getSimLootForFloor();
+  simCurrentDrops = rollChest(simLoot);
+  simCurrentCost = chestCost(simCurrentDrops, simLoot);
+  renderSimChest(simCurrentDrops, true);
+}
+function skipChest() {
+  logAction('SKIPPED', FREE_CHEST_VAL() - (simKismetUsedThisRun ? 1100000 : 0), 0);
+  endRun();
+}
+function endRun() {
+  simState = 'idle';
+  simCurrentDrops = null;
+  simKismetUsedThisRun = false;
+  document.getElementById('chestActions').style.display = 'none';
+  document.getElementById('chestBreakdown').style.display = 'none';
+  document.getElementById('chestDisplay').innerHTML = `<div class="chest-empty-msg"><div class="big">D</div><span>Roll another chest!</span></div>`;
+  document.getElementById('simChestCost').textContent = '';
+  document.getElementById('simChestTitle').textContent = getSimChestTypeLabel() + ' - ' + getSimFloorLabel();
+}
+function logAction(action, profit, cost) {
+  session.runs++;
+  session.total += profit;
+  if (profit > session.best) session.best = profit;
+  session.log.unshift({ run:session.runs, action, profit, cost });
+  if (session.log.length > 50) session.log.pop();
+  updateSessionUI();
+}
+function updateSessionUI() {
+  const totalEl = document.getElementById('ss-total');
+  const avgEl = document.getElementById('ss-avg');
+  totalEl.textContent = fmtC(session.total);
+  totalEl.className = 'ss-val ' + (session.total >= 0 ? 'pos' : 'neg');
+  avgEl.textContent = session.runs > 0 ? fmtC(session.total / session.runs) : '-';
+  avgEl.className = 'ss-val ' + (session.total >= 0 ? 'pos' : 'neg');
+  document.getElementById('ss-runs').textContent = session.runs;
+  document.getElementById('ss-best').textContent = session.best === -Infinity ? '-' : fmtC(session.best);
+  document.getElementById('runLog').innerHTML = session.log.length ? session.log.map(e => {
+    const cls = e.profit >= 0 ? 'pos' : 'neg';
+    const icon = e.action === 'OPENED' ? 'OPEN' : 'SKIP';
+    return `<div class="log-entry"><span class="log-run">#${e.run}</span><span class="log-action">${icon} ${e.action}</span><span class="log-profit ${cls}">${e.profit >= 0 ? '+' : ''}${fmtC(e.profit)}</span></div>`;
+  }).join('') : `<div style="padding:20px;text-align:center;font-family:'Share Tech Mono';font-size:11px;color:var(--text3)">No runs yet</div>`;
+}
+function resetSession() {
+  session = { total:0, runs:0, best:-Infinity, log:[] };
+  endRun();
+  document.getElementById('ss-total').textContent = '0';
+  document.getElementById('ss-runs').textContent = '0';
+  document.getElementById('ss-avg').textContent = '-';
+  document.getElementById('ss-best').textContent = '-';
+  document.getElementById('runLog').innerHTML = `<div style="padding:20px;text-align:center;font-family:'Share Tech Mono';font-size:11px;color:var(--text3)">No runs yet</div>`;
+}
+
+document.getElementById('kismetControls').style.display = 'block';
+changeCalcFloor();
+changeSimFloor();
+updateM7SRate();
+fetchPrices();
+</script>
+</body>
+</html>
